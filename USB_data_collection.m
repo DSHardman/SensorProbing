@@ -29,8 +29,9 @@ ch7.TerminalConfig = 'SingleEnded';%Differential  SingleEnded
 data = 5*ones(tim*dq.Rate,1);
 
 tic
+toc
 inScanData = readwrite(dq,data);
-
+toc
 
 stop(dq)
 

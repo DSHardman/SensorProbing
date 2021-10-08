@@ -24,7 +24,8 @@ samplesdown = int(timedown/dt)
 samplesup = int(timeup/dt)
 
 
-zeropose = [-0.0436169, -0.513561, 0.00600445, -1.45806, 2.77909, 0.00745422]
+#zeropose = [-0.0436169, -0.513561, 0.00600445, -1.45806, 2.77909, 0.00745422]
+zeropose = [-0.0436169, -0.513561, 0.05600445, -1.45806, 2.77909, 0.00745422]
 
 
 urnie = kgr.kg_robot(port=30010, db_host="169.254.155.50")
@@ -35,7 +36,7 @@ with ni.Task() as task:
     task.ao_channels.add_ao_voltage_chan("Dev1/ao0")
     task.write(5)
 
-for i in range(3000):
+for i in range(3450, 4000):
 
     x = random.random()*upperbound
     y = random.random()*upperbound
@@ -75,9 +76,9 @@ for i in range(3000):
 
     urnie.movel(startingpose, acc=0.02, vel=0.02)
 
-    np.save('presses/response'+str(i), data)
-    np.save('presses/poses'+str(i), poses)
-    np.save('presses/times'+str(i), times)
-    np.save('presses/xy'+str(i), xy)
+    # np.save('presses/response'+str(i), data)
+    # np.save('presses/poses'+str(i), poses)
+    # np.save('presses/times'+str(i), times)
+    # np.save('presses/xy'+str(i), xy)
 
     print(i)
