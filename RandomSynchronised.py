@@ -6,6 +6,7 @@ import random
 import nidaqmx as ni
 from nidaqmx.constants import TerminalConfiguration
 
+# This script times the motions of the arm with the NI-USB I/O device - 'Probing.py' controls just the UR5 motions
 
 timebefore = 1
 timedown = 1.5
@@ -15,32 +16,35 @@ timeafter = 1
 # depth = 0.001
 dt = 0.05
 
-upperbound = 34.5 * 0.001
+upperbound = 34.5 * 0.001  # Only probes a square of side length 34.5mm
 
 duration = timebefore + timeafter + timedown + timeup + timepressed
 samplesdown = int(timedown/dt)
 samplesup = int(timeup/dt)
 
 
-zeropose = [-0.0436169, -0.513561, 0.00600445, -1.45806, 2.77909, 0.00745422]
+zeropose = [-0.0436169, -0.513561, 0.00600445, -1.45806, 2.77909, 0.00745422]  # UR5 position at the sensor's bottom left corner
 # zeropose = [-0.0436169, -0.513561, 0.05600445, -1.45806, 2.77909, 0.00745422]
 
 
+#  Connect to UR5
 urnie = kgr.kg_robot(port=30010, db_host="169.254.155.50")
 urnie.set_tcp(wp.probing_tcp)
 
-
+#  Set positive rail to 5V
 with ni.Task() as task:
     task.ao_channels.add_ao_voltage_chan("Dev1/ao0")
     task.write(5)
 
-for i in range(320, 5000):
+for i in range(5000):  # Record 5000 probes
 
+    # Random xy positions & depth
     x = random.random()*upperbound
     y = random.random()*upperbound
     depth = random.choice([0.0005, 0.001, 0.0015])
     xy = [x, y, depth]
 
+    # Control press using defined variables
     startingpose = np.add(zeropose, [x, y, 0.01, 0, 0, 0])
     urnie.movel(startingpose, acc=0.02, vel=0.02)
 
@@ -59,6 +63,7 @@ for i in range(320, 5000):
 
     urnie.movel(poses[0], acc=0.02, vel=0.02)
 
+    # Measure and record sensor data
     with ni.Task() as task:
         task.ai_channels.add_ai_voltage_chan("Dev1/ai0:7", terminal_config=TerminalConfiguration.RSE)
 
@@ -75,6 +80,7 @@ for i in range(320, 5000):
 
     urnie.movel(startingpose, acc=0.02, vel=0.02)
 
+    # Save data
     np.save('presses3/response'+str(i), data)
     np.save('presses3/poses'+str(i), poses)
     np.save('presses3/times'+str(i), times)
