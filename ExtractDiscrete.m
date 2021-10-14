@@ -4,7 +4,7 @@ discretepoints = zeros(n,8,3);
 
 
 for i = 1:n
-    y = readNPY(strcat('presses3/rawdata/response',string(i-1), '.npy'));
+    y = readNPY(strcat('C/rawdata/response',string(i-1), '.npy'));
     x = zeros(size(y));
     for j = 1:8
         [x(:,j), ~] = pwc_tvdrobust(y(:,j), 15, 0);
