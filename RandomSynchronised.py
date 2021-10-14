@@ -1,5 +1,3 @@
-import pickle
-
 import waypoints as wp
 import kg_robot as kgr
 import time
@@ -36,7 +34,7 @@ with ni.Task() as task:
     task.ao_channels.add_ao_voltage_chan("Dev1/ao0")
     task.write(5)
 
-for i in range(5000):
+for i in range(320, 5000):
 
     x = random.random()*upperbound
     y = random.random()*upperbound
@@ -77,9 +75,9 @@ for i in range(5000):
 
     urnie.movel(startingpose, acc=0.02, vel=0.02)
 
-    np.save('presses2/response'+str(i), data)
-    np.save('presses2/poses'+str(i), poses)
-    np.save('presses2/times'+str(i), times)
-    np.save('presses2/xy'+str(i), xy)
+    np.save('presses3/response'+str(i), data)
+    np.save('presses3/poses'+str(i), poses)
+    np.save('presses3/times'+str(i), times)
+    np.save('presses3/xy'+str(i), xy)
 
     print(i)
