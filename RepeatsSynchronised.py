@@ -16,17 +16,12 @@ timeafter = 1
 # depth = 0.001
 dt = 0.05
 
-upperbound = (34.5 + 2*11.5) * 0.001  # Only probes a square of side length 34.5mm
-
 duration = timebefore + timeafter + timedown + timeup + timepressed
 samplesdown = int(timedown/dt)
 samplesup = int(timeup/dt)
 
 
 zeropose = [-0.0436169, -0.513561, 0.00600445, -1.45806, 2.77909, 0.00745422]  # UR5 position at the sensor's bottom left corner
-# zeropose = [-0.0436169, -0.513561, 0.05600445, -1.45806, 2.77909, 0.00745422]
-zeropose = [-0.0436169-(11.5/1000), -0.513561-(11.5/1000), 0.00600445, -1.45806, 2.77909, 0.00745422]  # with border
-
 
 #  Connect to UR5
 urnie = kgr.kg_robot(port=30010, db_host="169.254.155.50")
@@ -37,12 +32,12 @@ with ni.Task() as task:
     task.ao_channels.add_ao_voltage_chan("Dev1/ao0")
     task.write(5)
 
-for i in range(4741, 5000):  # Record 5000 probes
+for i in range(1000):  # Same location probed 1000 times
 
     # Random xy positions & depth
-    x = random.random()*upperbound
-    y = random.random()*upperbound
-    depth = random.choice([0.0005, 0.001, 0.0015])
+    x = 11.5/1000
+    y = 11.5/1000
+    depth = 0.001
     xy = [x, y, depth]
 
     # Control press using defined variables
@@ -82,9 +77,9 @@ for i in range(4741, 5000):  # Record 5000 probes
     urnie.movel(startingpose, acc=0.02, vel=0.02)
 
     # Save data
-    np.save('D/response'+str(i), data)
-    np.save('D/poses'+str(i), poses)
-    np.save('D/times'+str(i), times)
-    np.save('D/xy'+str(i), xy)
+    np.save('E/response'+str(i), data)
+    np.save('E/poses'+str(i), poses)
+    np.save('E/times'+str(i), times)
+    np.save('E/xy'+str(i), xy)
 
     print(i)
