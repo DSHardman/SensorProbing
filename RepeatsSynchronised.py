@@ -32,7 +32,7 @@ with ni.Task() as task:
     task.ao_channels.add_ao_voltage_chan("Dev1/ao0")
     task.write(5)
 
-for i in range(1000):  # Same location probed 1000 times
+for i in range(50):  # Same location probed 1000 times
 
     # Random xy positions & depth
     x = 11.5/1000
@@ -77,9 +77,9 @@ for i in range(1000):  # Same location probed 1000 times
     urnie.movel(startingpose, acc=0.02, vel=0.02)
 
     # Save data
-    np.save('E/response'+str(i), data)
-    np.save('E/poses'+str(i), poses)
-    np.save('E/times'+str(i), times)
-    np.save('E/xy'+str(i), xy)
+    np.save('G/response'+str(i), data)
+    np.save('G/poses'+str(i), poses)
+    np.save('G/times'+str(i), times)
+    np.save('G/xy'+str(i), xy)
 
     print(i)
