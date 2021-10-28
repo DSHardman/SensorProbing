@@ -21,7 +21,8 @@ samplesdown = int(timedown/dt)
 samplesup = int(timeup/dt)
 
 
-zeropose = [-0.0436169, -0.513561, 0.00600445, -1.45806, 2.77909, 0.00745422]  # UR5 position at the sensor's bottom left corner
+#zeropose = [-0.0436169, -0.513561, 0.00600445, -1.45806, 2.77909, 0.00745422]  # UR5 position at the sensor's bottom left corner
+zeropose = [-0.0718167, -0.443351, 0.0075692, -1.45804, 2.77907, 0.00753163]
 
 #  Connect to UR5
 urnie = kgr.kg_robot(port=30010, db_host="169.254.155.50")
@@ -32,7 +33,7 @@ with ni.Task() as task:
     task.ao_channels.add_ao_voltage_chan("Dev1/ao0")
     task.write(5)
 
-for i in range(50):  # Same location probed 1000 times
+for i in range(100):  # Same location probed 1000 times
 
     # Random xy positions & depth
     x = 11.5/1000
@@ -77,9 +78,9 @@ for i in range(50):  # Same location probed 1000 times
     urnie.movel(startingpose, acc=0.02, vel=0.02)
 
     # Save data
-    np.save('G/response'+str(i), data)
-    np.save('G/poses'+str(i), poses)
-    np.save('G/times'+str(i), times)
-    np.save('G/xy'+str(i), xy)
+    np.save('beta/response'+str(i), data)
+    np.save('beta/poses'+str(i), poses)
+    np.save('beta/times'+str(i), times)
+    np.save('beta/xy'+str(i), xy)
 
     print(i)

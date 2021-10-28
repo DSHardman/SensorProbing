@@ -3,7 +3,7 @@ n = 5000;
 touchpoints = zeros(n,8,10);
 
 for i = 1:n
-    y = readNPY(strcat('B/rawdata/response',string(i-1), '.npy'));
+    y = readNPY(strcat('A/rawdata/response',string(i-1), '.npy'));
     for j = 1:8
         touchpoints(i,j,:) = [y(45:5:65,j).' y(150:5:170,j).'];
     end

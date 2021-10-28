@@ -7,7 +7,7 @@ if depthincluded
 end
 
 for i = 1:n
-    [pred, ~, ~] = B100NeuronsRawData(touchNN(i, :));
+    [pred, ~, ~] = A100NeuronsRawData(touchNN(i, :));
     errors(i) = sqrt((pred(1)-positions(i,1))^2 + ...
         (pred(2)-positions(i,2))^2);
     if depthincluded

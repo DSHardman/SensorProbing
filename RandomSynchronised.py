@@ -16,21 +16,24 @@ timeafter = 1
 # depth = 0.001
 dt = 0.05
 
-upperbound = (34.5 + 2*11.5) * 0.001  # Only probes a square of side length 34.5mm
+#upperbound = (34.5 + 2*11.5) * 0.001  # Only probes a square of side length 34.5mm
+upperbound = 34.5 * 0.001  # Only probes a square of side length 34.5mm
 
 duration = timebefore + timeafter + timedown + timeup + timepressed
 samplesdown = int(timedown/dt)
 samplesup = int(timeup/dt)
 
 
-zeropose = [-0.0436169, -0.513561, 0.00600445, -1.45806, 2.77909, 0.00745422]  # UR5 position at the sensor's bottom left corner
+# zeropose = [-0.0436169, -0.513561, 0.00600445, -1.45806, 2.77909, 0.00745422]  # UR5 position at the sensor's bottom left corner
 # zeropose = [-0.0436169, -0.513561, 0.05600445, -1.45806, 2.77909, 0.00745422]
-zeropose = [-0.0436169-(11.5/1000), -0.513561-(11.5/1000), 0.00600445, -1.45806, 2.77909, 0.00745422]  # with border
+# zeropose = [-0.0436169-(11.5/1000), -0.513561-(11.5/1000), 0.00600445, -1.45806, 2.77909, 0.00745422]  # with border
+zeropose = [-0.0718167, -0.443351, 0.0075692, -1.45804, 2.77907, 0.00753163] # second sensor
 
 
 #  Connect to UR5
 urnie = kgr.kg_robot(port=30010, db_host="169.254.155.50")
 urnie.set_tcp(wp.probing_tcp)
+
 
 #  Set positive rail to 5V
 with ni.Task() as task:
@@ -82,9 +85,11 @@ for i in range(5000):  # Record 5000 probes
     urnie.movel(startingpose, acc=0.02, vel=0.02)
 
     # Save data
-    np.save('F/response'+str(i), data)
-    np.save('F/poses'+str(i), poses)
-    np.save('F/times'+str(i), times)
-    np.save('F/xy'+str(i), xy)
+    np.save('C/rawdata/response'+str(i), data)
+    np.save('C/rawdata/poses'+str(i), poses)
+    np.save('C/rawdata/times'+str(i), times)
+    np.save('C/rawdata/xy'+str(i), xy)
 
     print(i)
+
+urnie.close()
