@@ -78,9 +78,9 @@ for i in range(100):  # Same location probed 1000 times
     urnie.movel(startingpose, acc=0.02, vel=0.02)
 
     # Save data
-    np.save('D/rawdata/response'+str(i), data)
-    np.save('D/rawdata/poses'+str(i), poses)
-    np.save('D/rawdata/times'+str(i), times)
-    np.save('D/rawdata/xy'+str(i), xy)
+    np.save('E/rawdata/response'+str(i), data)
+    np.save('E/rawdata/poses'+str(i), poses)
+    np.save('E/rawdata/times'+str(i), times)
+    np.save('E/rawdata/xy'+str(i), xy)
 
     print(i)
