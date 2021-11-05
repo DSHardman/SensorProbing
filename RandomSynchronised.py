@@ -31,7 +31,7 @@ zeropose = [-0.0718167, -0.443351, 0.0075692, -1.45804, 2.77907, 0.00753163] # s
 
 
 #  Connect to UR5
-urnie = kgr.kg_robot(port=30010, db_host="169.254.155.50")
+urnie = kgr.kg_robot(port=30010, db_host="169.254.150.50")
 urnie.set_tcp(wp.probing_tcp)
 
 
@@ -85,10 +85,10 @@ for i in range(5000):  # Record 5000 probes
     urnie.movel(startingpose, acc=0.02, vel=0.02)
 
     # Save data
-    np.save('F/rawdata/response'+str(i), data)
-    np.save('F/rawdata/poses'+str(i), poses)
-    np.save('F/rawdata/times'+str(i), times)
-    np.save('F/rawdata/xy'+str(i), xy)
+    # np.save('F/rawdata/response'+str(i), data)
+    # np.save('F/rawdata/poses'+str(i), poses)
+    # np.save('F/rawdata/times'+str(i), times)
+    # np.save('F/rawdata/xy'+str(i), xy)
 
     print(i)
 
