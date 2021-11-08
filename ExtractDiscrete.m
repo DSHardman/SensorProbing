@@ -4,7 +4,7 @@ discretepoints = zeros(n,8,3);
 
 
 for i = 1:n
-    y = readNPY(strcat('F/rawdata/response',string(i-1), '.npy'));
+    y = readNPY(strcat('G/rawdata/response',string(i-1), '.npy'));
     x = zeros(size(y));
     for j = 1:8
         [x(:,j), ~] = pwc_tvdrobust(y(:,j), 15, 0);
@@ -16,7 +16,7 @@ end
 %%
 positions = zeros(n, 3);
 for i = 1:n
-    position = readNPY(strcat('F/rawdata/xy',string(i-1), '.npy'));
+    position = readNPY(strcat('G/rawdata/xy',string(i-1), '.npy'));
     position = position*1000;
     positions(i, :) = position;
 end
