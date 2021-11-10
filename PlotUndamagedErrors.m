@@ -7,8 +7,9 @@ if depthincluded
 end
 
 for i = 1:n
-    [pred, ~, ~] = F100NeuronsRawData(touchNNF(i, :));
-    positions = positionsF;
+    %[pred, ~, ~] = G60Neurons(discreteNNG(i, :));
+    pred = sim(trainednet, discreteNNA(i,:).');
+    positions = positionsA;
     errors(i) = sqrt((pred(1)-positions(i,1))^2 + ...
         (pred(2)-positions(i,2))^2);
     if depthincluded
