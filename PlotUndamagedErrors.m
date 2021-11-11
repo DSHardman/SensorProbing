@@ -6,9 +6,10 @@ if depthincluded
     deptherrors = zeros(n, 1);
 end
 
+cd TrainedNets
 for i = 1:n
-    %[pred, ~, ~] = G60Neurons(discreteNNG(i, :));
-    pred = sim(trainednet, discreteNNA(i,:).');
+    [pred, ~, ~] = A60Neurons(discreteNNA(i, :));
+    %pred = sim(trainednet, discreteNNA(i,:).');
     positions = positionsA;
     errors(i) = sqrt((pred(1)-positions(i,1))^2 + ...
         (pred(2)-positions(i,2))^2);
@@ -17,6 +18,7 @@ for i = 1:n
             - positions(i,3);
     end
 end
+cd ..
 
 interpolant = scatteredInterpolant(positions(:,1),...
     positions(:,2),errors);
