@@ -3,8 +3,7 @@
 pts=500;
 
 % define input and output from existing variables
-%inp=touchNNA;
-inp=discreteNNA;
+inp=touchNNA;
 out=positionsA;
 
 % normalise inputs & choose 4500 random samples for training
@@ -53,10 +52,10 @@ ypred=predict(net,(inp-mu)./sig);
 err=rssq((ypred-out)');
 
 % Calculate error for other datasets without retraining
-ypred2=predict(net,(discreteNNC-mu)./sig);
-ypred3=predict(net,(discreteNNF-mu)./sig);
-ypred4=predict(net,(discreteNNH-mu)./sig);
-ypred5=predict(net,(discreteNNM-mu)./sig);
+ypred2=predict(net,(touchNNC-mu)./sig);
+ypred3=predict(net,(touchNNF-mu)./sig);
+ypred4=predict(net,(touchNNH-mu)./sig);
+ypred5=predict(net,(touchNNM-mu)./sig);
 err2=rssq((ypred2-positionsC)');
 err3=rssq((ypred3-positionsF)');
 err4=rssq((ypred4-positionsH)');
@@ -66,20 +65,20 @@ mean(err5) % average error for healed data
 
 % plot these errors
 figure;
-heatscat(positionsA(:,1),positionsA(:,2),err, 1)
-heatscat(positionsC(:,1),positionsC(:,2),err2,2)
-heatscat(positionsF(:,1),positionsF(:,2),err3,3)
-heatscat(positionsH(:,1),positionsH(:,2),err4,4)
-heatscat(positionsM(:,1),positionsM(:,2),err5,5)
-
+heatscat(positionsA(:,1),positionsA(:,2),err, 1); title('Original');
+heatscat(positionsC(:,1),positionsC(:,2),err2,2); title('Damaged 1');
+heatscat(positionsF(:,1),positionsF(:,2),err3,3); title('Healed 1');
+heatscat(positionsH(:,1),positionsH(:,2),err4,4); title('Damaged 2');
+heatscat(positionsM(:,1),positionsM(:,2),err5,5); title('Healed 2');
+sgtitle('Undamaged Training: 24 input');
 
 % transfer learning: copy network but zero first 5 layer learning rates
 layers2=net.Layers;
 layers2(1:5) = freezeWeights(layers2(1:5));
 
 % new inputs, outputs, normalised training/validation sets for healed
-inp=discreteNNM;
-%inp=discreteNNM;
+inp=touchNNM;
+%inp=touchNNM;
 out=positionsM;
 P=randperm(length(inp));
 XTrain=(inp(P(1:pts),:)-mu)./sig;
@@ -104,11 +103,11 @@ opts = trainingOptions('adam', ...
 [net,info] = trainNetwork(XTrain,YTrain,layers2,opts);
 
 % errors when transferred with healed network
-ypred=predict(net,(discreteNNA-mu)./sig);
-ypred2=predict(net,(discreteNNC-mu)./sig);
-ypred3=predict(net,(discreteNNF-mu)./sig);
-ypred4=predict(net,(discreteNNH-mu)./sig);
-ypred5=predict(net,(discreteNNM-mu)./sig);
+ypred=predict(net,(touchNNA-mu)./sig);
+ypred2=predict(net,(touchNNC-mu)./sig);
+ypred3=predict(net,(touchNNF-mu)./sig);
+ypred4=predict(net,(touchNNH-mu)./sig);
+ypred5=predict(net,(touchNNM-mu)./sig);
 err=rssq((ypred-positionsA)');
 err2=rssq((ypred2-positionsC)');
 err3=rssq((ypred3-positionsF)');
@@ -118,24 +117,28 @@ err5=rssq((ypred5-positionsM)');
 mean(err5) % average error for healed data
 
 % plot results
-figure();
-heatscat(positionsA(:,1),positionsA(:,2),err, 1)
-heatscat(positionsC(:,1),positionsC(:,2),err2,2)
-heatscat(positionsF(:,1),positionsF(:,2),err3,3)
-heatscat(positionsH(:,1),positionsH(:,2),err4,4)
-heatscat(positionsM(:,1),positionsM(:,2),err5,5)
+figure;
+heatscat(positionsA(:,1),positionsA(:,2),err, 1); title('Original');
+heatscat(positionsC(:,1),positionsC(:,2),err2,2); title('Damaged 1');
+heatscat(positionsF(:,1),positionsF(:,2),err3,3); title('Healed 1');
+heatscat(positionsH(:,1),positionsH(:,2),err4,4); title('Damaged 2');
+heatscat(positionsM(:,1),positionsM(:,2),err5,5); title('Healed 2');
+sgtitle('Healed 2 Transfer: 24 input');
 
 function heatscat(x, y, z, plot)
     subplot(2,3,plot)
     %scatter(x, y, 50, z,'filled')
     
+    z = min(z, 34.5);
+    
     % use interpolated contour maps instead
     interpolant = scatteredInterpolant(x,y,double(z).');
     [xx,yy] = meshgrid(linspace(0,34.5,100));
     error_interp = interpolant(xx,yy);
-    contourf(xx,yy,error_interp);
+    contourf(xx,yy,error_interp, 'LineColor', 'none');
+    text(8, 11, string(mean(z)), 'color', 'w', 'fontsize', 10);
     
     axis('equal')
     colormap('hot')
-    caxis([0 30])
+    caxis([0 34.5])
 end
