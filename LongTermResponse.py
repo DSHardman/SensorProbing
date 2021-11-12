@@ -15,7 +15,6 @@ with ni.Task() as task:
 t0 = time.time()
 
 while True:  # Continue until physically stopped
-    myfile = open('longterm/response.txt', 'a')
     t_it = time.time()
     # Measure and record sensor data
     with ni.Task() as task:
@@ -23,10 +22,11 @@ while True:  # Continue until physically stopped
 
         data = task.read()
 
-    # Save data
-    #np.save('longterm/response', data)
-    #np.save('longterm/times', time.time() - t0)
+    myfile = open('J/response.txt', 'a')
     myfile.write(str(data)+'\n')
+    myfile.close()
+
+    myfile = open('J/times.txt', 'a')
     myfile.write(str(time.time() - t0)+'\n')
     myfile.close()
 
