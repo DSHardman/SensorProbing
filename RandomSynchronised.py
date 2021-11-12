@@ -40,7 +40,7 @@ with ni.Task() as task:
     task.ao_channels.add_ao_voltage_chan("Dev1/ao0")
     task.write(5)
 
-for i in range(3870, 5000):  # Record 5000 probes
+for i in range(5000):  # Record 5000 probes
 
     # Random xy positions & depth
     x = random.random()*upperbound

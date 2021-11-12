@@ -34,7 +34,6 @@ zeropose = [-0.0718167, -0.443351, 0.0075692, -1.45804, 2.77907, 0.00753163] # s
 urnie = kgr.kg_robot(port=30010, db_host="169.254.150.50")
 urnie.set_tcp(wp.probing_tcp)
 
-
 #  Set positive rail to 5V
 with ni.Task() as task:
     task.ao_channels.add_ao_voltage_chan("Dev1/ao0")
