@@ -22,15 +22,15 @@ while True:  # Continue until physically stopped
 
         data = task.read()
 
-    myfile = open('J/response.txt', 'a')
+    myfile = open('gelatin/response.txt', 'a')
     myfile.write(str(data)+'\n')
     myfile.close()
 
-    myfile = open('J/times.txt', 'a')
+    myfile = open('gelatin/times.txt', 'a')
     myfile.write(str(time.time() - t0)+'\n')
     myfile.close()
 
-    while time.time() - t_it < 15:
+    while time.time() - t_it < 5:
         continue
 
 urnie.close()
