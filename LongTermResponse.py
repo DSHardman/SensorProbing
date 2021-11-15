@@ -12,25 +12,23 @@ with ni.Task() as task:
     task.write(5)
 
 
-t0 = time.time()
-
-while True:  # Continue until physically stopped
-    t_it = time.time()
-    # Measure and record sensor data
-    with ni.Task() as task:
-        task.ai_channels.add_ai_voltage_chan("Dev1/ai0:7", terminal_config=TerminalConfiguration.RSE)
-
-        data = task.read()
-
-    myfile = open('J/response.txt', 'a')
-    myfile.write(str(data)+'\n')
-    myfile.close()
-
-    myfile = open('J/times.txt', 'a')
-    myfile.write(str(time.time() - t0)+'\n')
-    myfile.close()
-
-    while time.time() - t_it < 15:
-        continue
-
-urnie.close()
+# t0 = time.time()
+#
+# while True:  # Continue until physically stopped
+#     t_it = time.time()
+#     # Measure and record sensor data
+#     with ni.Task() as task:
+#         task.ai_channels.add_ai_voltage_chan("Dev1/ai0:7", terminal_config=TerminalConfiguration.RSE)
+#
+#         data = task.read()
+#
+#     myfile = open('J/response.txt', 'a')
+#     myfile.write(str(data)+'\n')
+#     myfile.close()
+#
+#     myfile = open('J/times.txt', 'a')
+#     myfile.write(str(time.time() - t0)+'\n')
+#     myfile.close()
+#
+#     while time.time() - t_it < 15:
+#         continue
