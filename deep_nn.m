@@ -3,8 +3,8 @@
 pts=500;
 
 % define input and output from existing variables
-inp=touchNNA;
-out=positionsA;
+inp=Original.random.extracted10;
+out=Original.random.positions;
 
 % normalise inputs & choose 4500 random samples for training
 mu=mean(inp);
@@ -52,24 +52,24 @@ ypred=predict(net,(inp-mu)./sig);
 err=rssq((ypred-out)');
 
 % Calculate error for other datasets without retraining
-ypred2=predict(net,(touchNNC-mu)./sig);
-ypred3=predict(net,(touchNNF-mu)./sig);
-ypred4=predict(net,(touchNNH-mu)./sig);
-ypred5=predict(net,(touchNNM-mu)./sig);
-err2=rssq((ypred2-positionsC)');
-err3=rssq((ypred3-positionsF)');
-err4=rssq((ypred4-positionsH)');
-err5=rssq((ypred5-positionsM)');
+ypred2=predict(net,(Damaged1.random.extracted10-mu)./sig);
+ypred3=predict(net,(Healed1.random.extracted10-mu)./sig);
+ypred4=predict(net,(Damaged2.random.extracted10-mu)./sig);
+ypred5=predict(net,(Healed2.random.extracted10-mu)./sig);
+err2=rssq((ypred2-Damaged1.random.positions)');
+err3=rssq((ypred3-Healed1.random.positions)');
+err4=rssq((ypred4-Damaged2.random.positions)');
+err5=rssq((ypred5-Healed2.random.positions)');
 
 mean(err5) % average error for healed data
 
 % plot these errors
 figure;
-heatscat(positionsA(:,1),positionsA(:,2),err, 1); title('Original');
-heatscat(positionsC(:,1),positionsC(:,2),err2,2); title('Damaged 1');
-heatscat(positionsF(:,1),positionsF(:,2),err3,3); title('Healed 1');
-heatscat(positionsH(:,1),positionsH(:,2),err4,4); title('Damaged 2');
-heatscat(positionsM(:,1),positionsM(:,2),err5,5); title('Healed 2');
+heatscat(Original.random.positions(:,1),Original.random.positions(:,2),err, 1); title('Original');
+heatscat(Damaged1.random.positions(:,1),Damaged1.random.positions(:,2),err2,2); title('Damaged 1');
+heatscat(Healed1.random.positions(:,1),Healed1.random.positions(:,2),err3,3); title('Healed 1');
+heatscat(Damaged2.random.positions(:,1),Damaged2.random.positions(:,2),err4,4); title('Damaged 2');
+heatscat(Healed2.random.positions(:,1),Healed2.random.positions(:,2),err5,5); title('Healed 2');
 sgtitle('Undamaged Training: 24 input');
 
 % transfer learning: copy network but zero first 5 layer learning rates
@@ -77,9 +77,8 @@ layers2=net.Layers;
 layers2(1:5) = freezeWeights(layers2(1:5));
 
 % new inputs, outputs, normalised training/validation sets for healed
-inp=touchNNM;
-%inp=touchNNM;
-out=positionsM;
+inp=Healed2.random.extracted10;
+out=Healed2.random.positions;
 P=randperm(length(inp));
 XTrain=(inp(P(1:pts),:)-mu)./sig;
 YTrain=out(P(1:pts),:);
@@ -103,26 +102,26 @@ opts = trainingOptions('adam', ...
 [net,info] = trainNetwork(XTrain,YTrain,layers2,opts);
 
 % errors when transferred with healed network
-ypred=predict(net,(touchNNA-mu)./sig);
-ypred2=predict(net,(touchNNC-mu)./sig);
-ypred3=predict(net,(touchNNF-mu)./sig);
-ypred4=predict(net,(touchNNH-mu)./sig);
-ypred5=predict(net,(touchNNM-mu)./sig);
-err=rssq((ypred-positionsA)');
-err2=rssq((ypred2-positionsC)');
-err3=rssq((ypred3-positionsF)');
-err4=rssq((ypred4-positionsH)');
-err5=rssq((ypred5-positionsM)');
+ypred=predict(net,(Original.random.extracted10-mu)./sig);
+ypred2=predict(net,(Damaged1.random.extracted10-mu)./sig);
+ypred3=predict(net,(Healed1.random.extracted10-mu)./sig);
+ypred4=predict(net,(Damaged2.random.extracted10-mu)./sig);
+ypred5=predict(net,(Healed2.random.extracted10-mu)./sig);
+err=rssq((ypred-Original.random.positions)');
+err2=rssq((ypred2-Damaged1.random.positions)');
+err3=rssq((ypred3-Healed1.random.positions)');
+err4=rssq((ypred4-Damaged2.random.positions)');
+err5=rssq((ypred5-Healed2.random.positions)');
 
 mean(err5) % average error for healed data
 
 % plot results
 figure;
-heatscat(positionsA(:,1),positionsA(:,2),err, 1); title('Original');
-heatscat(positionsC(:,1),positionsC(:,2),err2,2); title('Damaged 1');
-heatscat(positionsF(:,1),positionsF(:,2),err3,3); title('Healed 1');
-heatscat(positionsH(:,1),positionsH(:,2),err4,4); title('Damaged 2');
-heatscat(positionsM(:,1),positionsM(:,2),err5,5); title('Healed 2');
+heatscat(Original.random.positions(:,1),Original.random.positions(:,2),err, 1); title('Original');
+heatscat(Damaged1.random.positions(:,1),Damaged1.random.positions(:,2),err2,2); title('Damaged 1');
+heatscat(Healed1.random.positions(:,1),Healed1.random.positions(:,2),err3,3); title('Healed 1');
+heatscat(Damaged2.random.positions(:,1),Damaged2.random.positions(:,2),err4,4); title('Damaged 2');
+heatscat(Healed2.random.positions(:,1),Healed2.random.positions(:,2),err5,5); title('Healed 2');
 sgtitle('Healed 2 Transfer: 24 input');
 
 function heatscat(x, y, z, plot)

@@ -15,26 +15,19 @@ plot(nan, nan, 'color', 'b', 'LineWidth', 2);
 
 for i = 1:100
     % 100 repetitions of each probe for sensor in 3 states
-    original = readNPY(strcat('B/rawdata/response',string(i-1), '.npy'));
-    damaged = readNPY(strcat('D/rawdata/response',string(i-1), '.npy'));
-    healed = readNPY(strcat('E/rawdata/response',string(i-1), '.npy'));
-    
-    original = 120000./((5./original)- 1);
-    damaged = 120000./((5./damaged)- 1);
-    healed = 120000./((5./healed)- 1);
     
     % plot sensor 2 response
     subplot(1,2,1);
-    plot(0:0.05:9.95, original(:,3)/1000, 'color', 'k');
-    plot(0:0.05:9.95, damaged(:,3)/1000, 'color', 'r');
-    plot(0:0.05:9.95, healed(:,3)/1000, 'color', 'b');
+    plot(0:0.05:9.95, 120./((5./Original.repeated.rawresponses(i,:,3))- 1), 'color', 'k');
+    plot(0:0.05:9.95, 120./((5./Damaged1.repeated.rawresponses(i,:,3))- 1), 'color', 'r');
+    plot(0:0.05:9.95, 120./((5./Healed1.repeated.rawresponses(i,:,3))- 1), 'color', 'b');
     hold on
     
     % plot sensor 6 response
     subplot(1,2,2);
-    plot(0:0.05:9.95, original(:,7)/1000, 'color', 'k');
-    plot(0:0.05:9.95, damaged(:,7)/1000, 'color', 'r');
-    plot(0:0.05:9.95, healed(:,7)/1000, 'color', 'b');
+    plot(0:0.05:9.95, 120./((5./Original.repeated.rawresponses(i,:,7))- 1), 'color', 'k');
+    plot(0:0.05:9.95, 120./((5./Damaged1.repeated.rawresponses(i,:,7))- 1), 'color', 'r');
+    plot(0:0.05:9.95, 120./((5./Healed1.repeated.rawresponses(i,:,7))- 1), 'color', 'b');
     hold on
 end
 

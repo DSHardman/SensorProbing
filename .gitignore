@@ -1,3 +1,5 @@
 /.idea
 /First Tests
 **/rawdata
+/IndividualData
+SensorStates.mat
