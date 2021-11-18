@@ -16,7 +16,7 @@ end
 %%
 positions = zeros(n, 3);
 for i = 1:n
-    position = readNPY(strcat('M/rawdata/xy',string(i-1), '.npy'));
+    position = readNPY(strcat('P/rawdata/xy',string(i-1), '.npy'));
     position = position*1000;
     positions(i, :) = position;
 end

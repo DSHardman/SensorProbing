@@ -28,9 +28,9 @@ classdef SingleTest < handle
                 % set positions
                 obj.positions(i, :) = 1000*readNPY(strcat(letter,'/rawdata/xy',string(i-1), '.npy'));
                 % set times
-                %obj.times(i,:) = readNPY(strcat(letter,'/rawdata/times',string(i-1), '.npy')).';
+                obj.times(i,:) = readNPY(strcat(letter,'/rawdata/times',string(i-1), '.npy')).';
                 % set poses
-                %obj.poses(i,:,:) = readNPY(strcat(letter,'/rawdata/poses',string(i-1), '.npy'));
+                obj.poses(i,:,:) = readNPY(strcat(letter,'/rawdata/poses',string(i-1), '.npy'));
                 
                 % set responses
                 discretepoints = zeros(n,8,3);

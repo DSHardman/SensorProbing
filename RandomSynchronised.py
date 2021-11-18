@@ -85,10 +85,10 @@ for i in range(5000):  # Record 5000 probes
     urnie.movel(startingpose, acc=0.02, vel=0.02)
 
     # Save data
-    np.save('M/rawdata/response'+str(i), data)
-    np.save('M/rawdata/poses'+str(i), poses)
-    np.save('M/rawdata/times'+str(i), times)
-    np.save('M/rawdata/xy'+str(i), xy)
+    np.save('S/rawdata/response'+str(i), data)
+    np.save('S/rawdata/poses'+str(i), poses)
+    np.save('S/rawdata/times'+str(i), times)
+    np.save('S/rawdata/xy'+str(i), xy)
 
     print(i)
 

@@ -36,10 +36,8 @@ with ni.Task() as task:
 for i in range(100):  # Same location probed 1000 times
 
     # Repeated xy positions & depth
-    # x = 11.5/1000
-    # y = 11.5/1000
-    x = 11.5/1000
-    y = 23/1000
+    x = 23/1000
+    y = 11.5/1000
 
     depth = 0.001
     xy = [x, y, depth]
@@ -81,9 +79,9 @@ for i in range(100):  # Same location probed 1000 times
     urnie.movel(startingpose, acc=0.02, vel=0.02)
 
     # Save data
-    np.save('L/rawdata/response'+str(i), data)
-    np.save('L/rawdata/poses'+str(i), poses)
-    np.save('L/rawdata/times'+str(i), times)
-    np.save('L/rawdata/xy'+str(i), xy)
+    np.save('R/rawdata/response'+str(i), data)
+    np.save('R/rawdata/poses'+str(i), poses)
+    np.save('R/rawdata/times'+str(i), times)
+    np.save('R/rawdata/xy'+str(i), xy)
 
     print(i)

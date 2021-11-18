@@ -42,8 +42,8 @@ with ni.Task() as task:
 for i in range(100):  # 100 measurements in range
 
     # Probe along line
-    x = ((i-1)*(34.5/99)) / 1000
-    y = 23 / 1000
+    x = ((i - 1) * (34.5 / 99)) / 1000
+    y = 11.5 / 1000
     xy = [x, y, depth]
 
     # Control press using defined variables
@@ -81,8 +81,8 @@ for i in range(100):  # 100 measurements in range
     urnie.movel(startingpose, acc=0.02, vel=0.02)
 
     # Save data
-    np.save('K/responses/response'+str(i), data)
-    np.save('K/responses/xy'+str(i), xy)
+    np.save('Q/responses/response'+str(i), data)
+    np.save('Q/responses/xy'+str(i), xy)
 
     print(i)
 
