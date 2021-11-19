@@ -9,11 +9,11 @@ classdef SensorState < handle
         %Constructor
         function obj = SensorState(randomletter, randomn, repeatedletter,...
                 repeatedn, lineletter, linen)
-            obj.random = SingleTest(randomletter, randomn);
-            obj.repeated = SingleTest(repeatedletter, repeatedn);
+            obj.random = SingleTest(randomletter, randomn, 0);
+            obj.repeated = SingleTest(repeatedletter, repeatedn, 0);
             
             if nargin == 6
-                obj.line = SingleTest(lineletter, linen);
+                obj.line = SingleTest(lineletter, linen, 1);
             elseif nargin == 4
                 obj.line = NaN;
             else

@@ -6,7 +6,7 @@ import random
 import nidaqmx as ni
 from nidaqmx.constants import TerminalConfiguration
 
-# This script times the motions of the arm with the NI-USB I/O device - 'Probing.py' controls just the UR5 motions
+# LINES 42 & 43 CHANGE WHICH LINE IS BEING PROBED
 
 timebefore = 1
 timedown = 3
@@ -24,10 +24,7 @@ samplesdown = int(timedown/dt)
 samplesup = int(timeup/dt)
 
 
-# zeropose = [-0.0436169, -0.513561, 0.00600445, -1.45806, 2.77909, 0.00745422]  # UR5 position at the sensor's bottom left corner
-# zeropose = [-0.0436169, -0.513561, 0.05600445, -1.45806, 2.77909, 0.00745422]
-# zeropose = [-0.0436169-(11.5/1000), -0.513561-(11.5/1000), 0.00600445, -1.45806, 2.77909, 0.00745422]  # with border
-zeropose = [-0.0718167, -0.443351, 0.0075692, -1.45804, 2.77907, 0.00753163] # second sensor
+zeropose = [-0.0718167, -0.443351, 0.0075692, -1.45804, 2.77907, 0.00753163]
 
 
 #  Connect to UR5
@@ -81,8 +78,8 @@ for i in range(100):  # 100 measurements in range
     urnie.movel(startingpose, acc=0.02, vel=0.02)
 
     # Save data
-    np.save('Q/responses/response'+str(i), data)
-    np.save('Q/responses/xy'+str(i), xy)
+    np.save('line/rawdata/response'+str(i), data)
+    np.save('line/rawdata/xy'+str(i), xy)
 
     print(i)
 
