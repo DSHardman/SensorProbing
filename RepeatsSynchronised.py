@@ -6,7 +6,7 @@ import random
 import nidaqmx as ni
 from nidaqmx.constants import TerminalConfiguration
 
-# This script times the motions of the arm with the NI-USB I/O device - 'Probing.py' controls just the UR5 motions
+# LINES 39 & 40 CHANGE WHICH POINT IS BEING PROBED
 
 timebefore = 1
 timedown = 1.5
@@ -79,9 +79,9 @@ for i in range(100):  # Same location probed 1000 times
     urnie.movel(startingpose, acc=0.02, vel=0.02)
 
     # Save data
-    np.save('R/rawdata/response'+str(i), data)
-    np.save('R/rawdata/poses'+str(i), poses)
-    np.save('R/rawdata/times'+str(i), times)
-    np.save('R/rawdata/xy'+str(i), xy)
+    np.save('rep/rawdata/response'+str(i), data)
+    np.save('rep/rawdata/poses'+str(i), poses)
+    np.save('rep/rawdata/times'+str(i), times)
+    np.save('rep/rawdata/xy'+str(i), xy)
 
     print(i)
