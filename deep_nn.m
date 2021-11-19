@@ -54,11 +54,11 @@ err=rssq((ypred-out)');
 % Calculate error for other datasets without retraining
 ypred2=predict(net,(Damaged1.random.extracted10-mu)./sig);
 ypred3=predict(net,(Healed1.random.extracted10-mu)./sig);
-ypred4=predict(net,(Damaged2.random.extracted10-mu)./sig);
+ypred4=predict(net,(Damaged4.random.extracted10-mu)./sig);
 ypred5=predict(net,(Healed2.random.extracted10-mu)./sig);
 err2=rssq((ypred2-Damaged1.random.positions)');
 err3=rssq((ypred3-Healed1.random.positions)');
-err4=rssq((ypred4-Damaged2.random.positions)');
+err4=rssq((ypred4-Damaged4.random.positions)');
 err5=rssq((ypred5-Healed2.random.positions)');
 
 mean(err5) % average error for healed data
@@ -68,7 +68,7 @@ figure;
 heatscat(Original.random.positions(:,1),Original.random.positions(:,2),err, 1); title('Original');
 heatscat(Damaged1.random.positions(:,1),Damaged1.random.positions(:,2),err2,2); title('Damaged 1');
 heatscat(Healed1.random.positions(:,1),Healed1.random.positions(:,2),err3,3); title('Healed 1');
-heatscat(Damaged2.random.positions(:,1),Damaged2.random.positions(:,2),err4,4); title('Damaged 2');
+heatscat(Damaged4.random.positions(:,1),Damaged4.random.positions(:,2),err4,4); title('Damaged 2');
 heatscat(Healed2.random.positions(:,1),Healed2.random.positions(:,2),err5,5); title('Healed 2');
 sgtitle('Undamaged Training: 24 input');
 
@@ -105,12 +105,12 @@ opts = trainingOptions('adam', ...
 ypred=predict(net,(Original.random.extracted10-mu)./sig);
 ypred2=predict(net,(Damaged1.random.extracted10-mu)./sig);
 ypred3=predict(net,(Healed1.random.extracted10-mu)./sig);
-ypred4=predict(net,(Damaged2.random.extracted10-mu)./sig);
+ypred4=predict(net,(Damaged4.random.extracted10-mu)./sig);
 ypred5=predict(net,(Healed2.random.extracted10-mu)./sig);
 err=rssq((ypred-Original.random.positions)');
 err2=rssq((ypred2-Damaged1.random.positions)');
 err3=rssq((ypred3-Healed1.random.positions)');
-err4=rssq((ypred4-Damaged2.random.positions)');
+err4=rssq((ypred4-Damaged4.random.positions)');
 err5=rssq((ypred5-Healed2.random.positions)');
 
 mean(err5) % average error for healed data
@@ -120,7 +120,7 @@ figure;
 heatscat(Original.random.positions(:,1),Original.random.positions(:,2),err, 1); title('Original');
 heatscat(Damaged1.random.positions(:,1),Damaged1.random.positions(:,2),err2,2); title('Damaged 1');
 heatscat(Healed1.random.positions(:,1),Healed1.random.positions(:,2),err3,3); title('Healed 1');
-heatscat(Damaged2.random.positions(:,1),Damaged2.random.positions(:,2),err4,4); title('Damaged 2');
+heatscat(Damaged4.random.positions(:,1),Damaged4.random.positions(:,2),err4,4); title('Damaged 2');
 heatscat(Healed2.random.positions(:,1),Healed2.random.positions(:,2),err5,5); title('Healed 2');
 sgtitle('Healed 2 Transfer: 24 input');
 
