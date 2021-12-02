@@ -21,10 +21,12 @@ classdef SensorState < handle
             end
         end
         
-         function animateline(obj)
-             
-             obj.line.plotresponse(1);
-             for i = 2:obj.line.n
+        function animateline(obj)
+            
+            obj.line.plotresponse(1);
+            pause(0.1);
+            for i = 2:obj.line.n
+                
                 obj.line.plotresponse(i);
                 
                 subplot(1,2,1);
@@ -38,8 +40,30 @@ classdef SensorState < handle
                 legend boxoff
                 
                 pause(0.1);
-             end
-         end
+            end
+        end
+        
+        function animaterepeats(obj)
+            
+            obj.repeated.plotresponse(1);
+            pause(0.05);
+            for i = 2:obj.repeated.n
+                
+                obj.repeated.plotresponse(i);
+                
+                subplot(1,2,1);
+                children = get(gca, 'Children');
+                delete(children(end-8:end));
+                
+                subplot(1,2,2);
+                children = get(gca, 'Children');
+                delete(children(end-7:end));
+                legend('Orientation', 'Horizontal', 'Location', 's');
+                legend boxoff
+                
+                pause(0.05);
+            end
+        end
     end
 end
 

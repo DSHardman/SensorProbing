@@ -87,8 +87,9 @@ classdef SingleTest < handle
             set(gca, 'LineWidth', 2, 'FontSize', 15, 'XTickLabel', []);
             box off
             ylabel('Sensor Response (V)');
-            titlestring = sprintf('x = %.3fmm, y = %.3fmm',...
-                obj.positions(iteration,1), obj.positions(iteration,2));
+            titlestring = sprintf('x = %.3fmm, y = %.3fmm, Press %d',...
+                obj.positions(iteration,1), obj.positions(iteration,2),...
+                iteration);
             title(titlestring);
             
             
