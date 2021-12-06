@@ -11,8 +11,8 @@
 pts=500;
 
 % define input and output from existing variables
-%inp=Original.random.extracted10;
-inp=Original.random.extracted10;
+%inp=Original.random.extracted3;
+inp=Original.random.extracted3;
 out=Original.random.positions;
 
 % normalise inputs & choose 4500 random samples for training
@@ -63,12 +63,12 @@ ypred=predict(net,(inp-mu)./sig);
 err=rssq((ypred-out)');
 
 % Calculate error for other datasets without retraining
-ypred2=predict(net,(Damaged4.random.extracted10-mu)./sig);
-ypred3=predict(net,(Healed4.random.extracted10-mu)./sig);
-ypred4=predict(net,(Damaged2.random.extracted10-mu)./sig);
-ypred5=predict(net,(Healed2.random.extracted10-mu)./sig);
-err2=rssq((ypred2-Damaged4.random.positions)');
-err3=rssq((ypred3-Healed4.random.positions)');
+ypred2=predict(net,(Damaged1.random.extracted3-mu)./sig);
+ypred3=predict(net,(Healed1.random.extracted3-mu)./sig);
+ypred4=predict(net,(Damaged2.random.extracted3-mu)./sig);
+ypred5=predict(net,(Healed2.random.extracted3-mu)./sig);
+err2=rssq((ypred2-Damaged1.random.positions)');
+err3=rssq((ypred3-Healed1.random.positions)');
 err4=rssq((ypred4-Damaged2.random.positions)');
 err5=rssq((ypred5-Healed2.random.positions)');
 
@@ -77,8 +77,8 @@ mean(err5) % average error for healed data
 % plot these errors
 figure;
 heatscat(Original.random.positions(:,1),Original.random.positions(:,2),err, 1); title('Original');
-heatscat(Damaged4.random.positions(:,1),Damaged4.random.positions(:,2),err2,2); title('Damaged 4');
-heatscat(Healed4.random.positions(:,1),Healed4.random.positions(:,2),err3,3); title('Healed 4');
+heatscat(Damaged1.random.positions(:,1),Damaged1.random.positions(:,2),err2,2); title('Damaged 1');
+heatscat(Healed1.random.positions(:,1),Healed1.random.positions(:,2),err3,3); title('Healed 1');
 heatscat(Damaged2.random.positions(:,1),Damaged2.random.positions(:,2),err4,4); title('Damaged 2');
 heatscat(Healed2.random.positions(:,1),Healed2.random.positions(:,2),err5,5); title('Healed 2');
 sgtitle('Undamaged Training: 24 input');
@@ -191,7 +191,7 @@ sgtitle('Healed 2 Transfer: 24 input');
 
 
 function heatscat(x, y, z, plot)
-    subplot(2,3,plot)
+    %subplot(2,3,plot)
     %scatter(x, y, 50, z,'filled')
     
     z = min(z, 34.5);
@@ -201,9 +201,10 @@ function heatscat(x, y, z, plot)
     [xx,yy] = meshgrid(linspace(0,34.5,100));
     error_interp = interpolant(xx,yy);
     contourf(xx,yy,error_interp, 'LineColor', 'none');
-    text(8, 11, string(mean(z)), 'color', 'w', 'fontsize', 10);
+    %text(8, 11, string(mean(z)), 'color', 'w', 'fontsize', 10);
     
     axis('equal')
     colormap('hot')
     caxis([0 34.5])
+    set(gca, 'Visible', 'off');
 end

@@ -83,6 +83,7 @@ classdef SingleTest < handle
                 end
             end
             ylim([min(min(min(obj.rawresponses)))-0.5 max(max(max(obj.rawresponses)))]);
+            %ylim([0 5])
             xlim([0 308])
             set(gca, 'LineWidth', 2, 'FontSize', 15, 'XTickLabel', []);
             box off
