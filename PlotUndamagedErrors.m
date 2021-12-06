@@ -6,10 +6,10 @@ if depthincluded
     deptherrors = zeros(n, 1);
 end
 
-positions = Damaged4.random.positions;
+positions = Damaged2.random.positions;
 cd TrainedNets
 for i = 1:n
-    [pred, ~, ~] = Healed260Neurons(Damaged4.random.extracted3(i, :));
+    [pred, ~, ~] = Healed160Neurons(Damaged2.random.extracted3(i, :));
     %pred = sim(trainednet, Original.random.extracted3(i,:).');
     %errors(i) = sqrt((pred(1)-positions(i,1))^2 + ...
     %    (pred(2)-positions(i,2))^2);
@@ -21,14 +21,16 @@ for i = 1:n
 end
 cd ..
 
+errors = min(errors, 48.8);
+
 interpolant = scatteredInterpolant(positions(:,1),...
     positions(:,2),errors);
-[xx,yy] = meshgrid(linspace(0,33.5,100));
+[xx,yy] = meshgrid(linspace(0,34.5,100));
 error_interp = interpolant(xx,yy);
-
+    
 figure();
 contourf(xx,yy,error_interp);
-%caxis([0 11.5]);
+caxis([0 48.8]);
 colorbar
 axis square
 axis off

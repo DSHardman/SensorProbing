@@ -12,8 +12,8 @@ pts=500;
 
 % define input and output from existing variables
 %inp=Original.random.extracted3;
-inp=Original.random.extracted3;
-out=Original.random.positions;
+inp=Healed1.random.extracted3;
+out=Healed1.random.positions;
 
 % normalise inputs & choose 4500 random samples for training
 mu=mean(inp);
@@ -63,15 +63,26 @@ ypred=predict(net,(inp-mu)./sig);
 err=rssq((ypred-out)');
 
 % Calculate error for other datasets without retraining
-ypred2=predict(net,(Damaged1.random.extracted3-mu)./sig);
-ypred3=predict(net,(Healed1.random.extracted3-mu)./sig);
+ypred2=predict(net,(Damaged2.random.extracted3-mu)./sig);
+ypred3=predict(net,(Healed2.random.extracted3-mu)./sig);
 ypred4=predict(net,(Damaged2.random.extracted3-mu)./sig);
 ypred5=predict(net,(Healed2.random.extracted3-mu)./sig);
-err2=rssq((ypred2-Damaged1.random.positions)');
-err3=rssq((ypred3-Healed1.random.positions)');
+err2=rssq((ypred2-Damaged2.random.positions)');
+err3=rssq((ypred3-Healed2.random.positions)');
 err4=rssq((ypred4-Damaged2.random.positions)');
 err5=rssq((ypred5-Healed2.random.positions)');
 
+figure();
+heatscat(Healed1.random.positions(:,1),Healed1.random.positions(:,2),err, 1);
+mean(err)
+figure();
+heatscat(Damaged2.random.positions(:,1),Damaged2.random.positions(:,2),err2, 1);
+mean(err2)
+figure();
+heatscat(Healed2.random.positions(:,1),Healed2.random.positions(:,2),err3, 1);
+mean(err3)
+
+%% section
 mean(err5) % average error for healed data
 
 % plot these errors
@@ -194,7 +205,7 @@ function heatscat(x, y, z, plot)
     %subplot(2,3,plot)
     %scatter(x, y, 50, z,'filled')
     
-    z = min(z, 34.5);
+    z = min(z, 48.8);
     
     % use interpolated contour maps instead
     interpolant = scatteredInterpolant(x,y,double(z).');
@@ -205,6 +216,6 @@ function heatscat(x, y, z, plot)
     
     axis('equal')
     colormap('hot')
-    caxis([0 34.5])
+    caxis([0 48.8])
     set(gca, 'Visible', 'off');
 end
