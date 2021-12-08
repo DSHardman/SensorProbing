@@ -11,9 +11,9 @@
 pts=500;
 
 % define input and output from existing variables
-%inp=Original.random.extracted3;
-inp=Healed1.random.extracted3;
-out=Healed1.random.positions;
+%inp=Original.random.extracted10;
+inp=Healed5.random.extracted10;
+out=Healed5.random.positions;
 
 % normalise inputs & choose 4500 random samples for training
 mu=mean(inp);
@@ -62,24 +62,27 @@ opts = trainingOptions('adam', ...
 ypred=predict(net,(inp-mu)./sig);
 err=rssq((ypred-out)');
 
+
 % Calculate error for other datasets without retraining
-ypred2=predict(net,(Damaged2.random.extracted3-mu)./sig);
-ypred3=predict(net,(Healed2.random.extracted3-mu)./sig);
-ypred4=predict(net,(Damaged2.random.extracted3-mu)./sig);
-ypred5=predict(net,(Healed2.random.extracted3-mu)./sig);
-err2=rssq((ypred2-Damaged2.random.positions)');
-err3=rssq((ypred3-Healed2.random.positions)');
+ypred2=predict(net,(Damaged4.random.extracted10-mu)./sig);
+ypred3=predict(net,(Healed5.random.extracted10-mu)./sig);
+ypred4=predict(net,(Damaged2.random.extracted10-mu)./sig);
+ypred5=predict(net,(Healed2.random.extracted10-mu)./sig);
+err2=rssq((ypred2-Damaged4.random.positions)');
+err3=rssq((ypred3-Healed5.random.positions)');
 err4=rssq((ypred4-Damaged2.random.positions)');
 err5=rssq((ypred5-Healed2.random.positions)');
 
 figure();
-heatscat(Healed1.random.positions(:,1),Healed1.random.positions(:,2),err, 1);
+heatscat(Healed5.random.positions(:,1),Healed5.random.positions(:,2),err, 1);
 mean(err)
+
+%%
 figure();
-heatscat(Damaged2.random.positions(:,1),Damaged2.random.positions(:,2),err2, 1);
+heatscat(Damaged4.random.positions(:,1),Damaged4.random.positions(:,2),err2, 1);
 mean(err2)
 figure();
-heatscat(Healed2.random.positions(:,1),Healed2.random.positions(:,2),err3, 1);
+heatscat(Healed5.random.positions(:,1),Healed5.random.positions(:,2),err3, 1);
 mean(err3)
 
 %% section
@@ -217,5 +220,6 @@ function heatscat(x, y, z, plot)
     axis('equal')
     colormap('hot')
     caxis([0 48.8])
+    caxis([0 30])
     set(gca, 'Visible', 'off');
 end
