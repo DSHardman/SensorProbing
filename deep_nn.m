@@ -1,7 +1,3 @@
-% From Thomas, 12/11/21
-
-%% H25 FIRST
-
 % define input and output from existing variables
 inp=Healed2.random.extracted10;
 out=Healed2.random.positions;
@@ -58,81 +54,20 @@ opts = trainingOptions('adam', ...
 % subplot(1,3,3); heatscat(net, Healed5, mu, sig);
 
 %% Transfer
+transfer(net, Healed5, 49, 5, "weighted", 7, mu, sig);
 
-transferns = [49, 100, 196, 289, 484, 4900];
-for i = 1:3
-    for j = 1:length(transferns)
-        for k = 3:2:7
-            transfer(net, Healed5, transferns(j), k, "random", 7, mu, sig, sprintf("h25_random_%d_%d_%d", k, transferns(j), i));
-            transfer(net, Healed5, transferns(j), k, "grid", 7, mu, sig, sprintf("h25_grid_%d_%d_%d", k, transferns(j), i));
-            transfer(net, Healed5, transferns(j), k, "weighted", 7, mu, sig, sprintf("h25_weighted_%d_%d_%d", k, transferns(j), i));
-            fprintf("H25: %d/3, %d/6, %d Frozen\n", i, j, k);
-        end
-    end
-end
-
-%% H12 NEXT
-
-% define input and output from existing variables
-inp=Healed1.random.extracted10;
-out=Healed1.random.positions;
-
-% normalise inputs & choose 4500 random samples for training
-mu=mean(inp);
-sig=std(inp);
-
-P=randperm(length(inp));
-XTrain=(inp(P(1:4500),:)-mu)./sig; % 10 percent used for validation
-YTrain=out(P(1:4500),:);
-
-% final 500 used as normalised validation set
-XVal=(inp(P(4500:end),:)-mu)./sig;
-YVal=out(P(4500:end),:);
-
-len=size(XTrain,2);
-
-% define network and training options
-layers = [
-    featureInputLayer(len,"Name","featureinput")
-    fullyConnectedLayer(20,"Name","fc_1")
-     tanhLayer("Name","relu2")
-    fullyConnectedLayer(10,"Name","fc_2")
-    tanhLayer("Name","reluw")
-        fullyConnectedLayer(10,"Name","fc_5")
-    reluLayer("Name","relu3e")
-    fullyConnectedLayer(3,"Name","fc_6")
-    regressionLayer("Name","regressionoutput")];
-
-opts = trainingOptions('adam', ...
-    'MaxEpochs',2000, ... % number of training iterations.
-    'MiniBatchSize', 512*7,... %%%512
-     'ValidationData',{XVal,YVal}, ...
-    'ValidationFrequency',30, ...
-    'GradientThreshold',1, ...
-    'ValidationPatience',10,...
-    'InitialLearnRate',0.005*10, ...
-    'LearnRateSchedule','piecewise', ...
-    'LearnRateDropPeriod',125*10, ...%%changed
-    'LearnRateDropFactor',0.2/1, ...%%
-    'Verbose',1, ...
-    'Plots','training-progress', 'ExecutionEnvironment', 'gpu');
-
-% Training
-[net, ~] = trainNetwork(XTrain,YTrain,layers,opts);
-
-%% Transfer
-
-transferns = [49, 100, 196, 289, 484, 4900];
-for i = 1:3
-    for j = 1:length(transferns)
-        for k = 3:2:7
-            transfer(net, Healed2, transferns(j), k, "random", 7, mu, sig, sprintf("h12_random_%d_%d_%d", k, transferns(j), i));
-            transfer(net, Healed2, transferns(j), k, "grid", 7, mu, sig, sprintf("h12_grid_%d_%d_%d", k, transferns(j), i));
-            transfer(net, Healed2, transferns(j), k, "weighted", 7, mu, sig, sprintf("h12_weighted_%d_%d_%d", k, transferns(j), i));
-            fprintf("H12: %d/3, %d/6, %d Frozen\n", i, j, k);
-        end
-    end
-end
+% Large scale transfers & save:
+% transferns = [49, 100, 196, 289, 484, 4900];
+% for i = 1:3
+%     for j = 1:length(transferns)
+%         for k = 3:2:7
+%             transfer(net, Healed5, transferns(j), k, "random", 7, mu, sig, sprintf("h25_random_%d_%d_%d", k, transferns(j), i));
+%             transfer(net, Healed5, transferns(j), k, "grid", 7, mu, sig, sprintf("h25_grid_%d_%d_%d", k, transferns(j), i));
+%             transfer(net, Healed5, transferns(j), k, "weighted", 7, mu, sig, sprintf("h25_weighted_%d_%d_%d", k, transferns(j), i));
+%             fprintf("H25: %d/3, %d/6, %d Frozen\n", i, j, k);
+%         end
+%     end
+% end
 
 %%
 
@@ -145,14 +80,15 @@ function transfer(net, newstate, pts, frozen, method, damagedsensor, mu, sig, sa
     inp=newstate.random.extracted10;
     out=newstate.random.positions;
 
-    if method == "random"
+    % Sampling method: random, grid, or weighted
+    if method == "random" % locations are randomly sampled
         P=randperm(length(inp));
         XTrain=(inp(P(1:round(0.9*pts)),:)-mu)./sig; % 10 percent used for validation
         YTrain=out(P(1:round(0.9*pts)),:);
 
         XVal=(inp(P(round(0.9*pts)+1:pts),:)-mu)./sig;
         YVal=out(P(round(0.9*pts)+1:pts),:);
-    elseif method == "grid"
+    elseif method == "grid" % locations are arranged in a grid
         side = floor(sqrt(pts));
         locations = 0:34.5/((side-1)):34.5;
         x = zeros(side^2, 1);
@@ -171,7 +107,7 @@ function transfer(net, newstate, pts, frozen, method, damagedsensor, mu, sig, sa
         
         XVal=(inp(P(round(0.9*length(P))+1:length(P)),:)-mu)./sig;
         YVal=out(P(round(0.9*length(P))+1:length(P)),:);
-    elseif method == "weighted"
+    elseif method == "weighted" % locations are weighted in 1D with a Gaussian
         if damagedsensor <= 4
             truncated = truncate(makedist('Normal',(4-damagedsensor)*11.5,15),0,34.5);
             x = random(truncated,pts,1);
@@ -193,7 +129,7 @@ function transfer(net, newstate, pts, frozen, method, damagedsensor, mu, sig, sa
         error('Invalid Sampling Method');
     end
 
-    % train
+    % Transfer Training
     opts = trainingOptions('adam', ...
         'MaxEpochs',2000, ... % number of training iterations.
         'MiniBatchSize', 512*7,... %%%512
@@ -212,9 +148,13 @@ function transfer(net, newstate, pts, frozen, method, damagedsensor, mu, sig, sa
 
     % Calcute and plot 3D error
     figure();
-    heatscat(net2, newstate, mu, sig, savename);
-    exportgraphics(gcf, strcat('Images/',savename,'.png'));
-    close();
+    if nargin == 9 % save if input savename is given
+        heatscat(net2, newstate, mu, sig, savename);
+        exportgraphics(gcf, strcat('Images/',savename,'.png'));
+        close();
+    else
+        heatscat(net2, newstate, mu, sig);
+    end
 end
 
 function heatscat(net, state, mu, sig, savename)
