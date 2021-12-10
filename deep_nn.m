@@ -1,6 +1,6 @@
 % define input and output from existing variables
-inp=Healed2.random.extracted10;
-out=Healed2.random.positions;
+inp=Healed1.random.extracted10;
+out=Healed1.random.positions;
 
 % normalise inputs & choose 4500 random samples for training
 mu=mean(inp);
@@ -45,6 +45,8 @@ opts = trainingOptions('adam', ...
 % Training
 [net, ~] = trainNetwork(XTrain,YTrain,layers,opts);
 
+heatscat(net, Healed5, mu, sig);
+
 % % Calcute and plot 3D error over input data
 % figure();
 % subplot(1,3,1); heatscat(net, Healed2, mu, sig);
@@ -54,24 +56,27 @@ opts = trainingOptions('adam', ...
 % subplot(1,3,3); heatscat(net, Healed5, mu, sig);
 
 %% Transfer
-transfer(net, Healed5, 49, 5, "weighted", 7, mu, sig);
+%transfer(net, Healed5, 49, 5, "weighted", 7, mu, sig);
 
 % Large scale transfers & save:
-% transferns = [49, 100, 196, 289, 484, 4900];
-% for i = 1:3
-%     for j = 1:length(transferns)
-%         for k = 3:2:7
-%             transfer(net, Healed5, transferns(j), k, "random", 7, mu, sig, sprintf("h25_random_%d_%d_%d", k, transferns(j), i));
-%             transfer(net, Healed5, transferns(j), k, "grid", 7, mu, sig, sprintf("h25_grid_%d_%d_%d", k, transferns(j), i));
-%             transfer(net, Healed5, transferns(j), k, "weighted", 7, mu, sig, sprintf("h25_weighted_%d_%d_%d", k, transferns(j), i));
-%             fprintf("H25: %d/3, %d/6, %d Frozen\n", i, j, k);
-%         end
-%     end
-% end
+transferns = [49, 100, 196, 289, 484, 4900];
+
+errors = zeros(3,6,3);
+for i = 1:3
+    for j = 1:length(transferns)
+        for k = 3:2:7
+            %transfer(net, Healed5, transferns(j), k, "random", 7, mu, sig, sprintf("h25_random_%d_%d_%d", k, transferns(j), i));
+            %transfer(net, Healed5, transferns(j), k, "grid", 7, mu, sig, sprintf("h25_grid_%d_%d_%d", k, transferns(j), i));
+            %transfer(net, Healed5, transferns(j), k, "weighted", 7, mu, sig, sprintf("h25_weighted_%d_%d_%d", k, transferns(j), i));
+            errors(i,j,(k-1)/2) = transfer(net, Healed2, transferns(j), k, "2d", [17.25 23], mu, sig, sprintf("h25_2d_%d_%d_%d", k, transferns(j), i));
+            fprintf("H25: %d/3, %d/6, %d Frozen\n", i, j, k);
+        end
+    end
+end
 
 %%
 
-function transfer(net, newstate, pts, frozen, method, damagedsensor, mu, sig, savename)
+function errorout = transfer(net, newstate, pts, frozen, method, damagedsensor, mu, sig, savename)
     % transfer learning: copy network but zero first few layer learning rates
     layers=net.Layers;
     layers(1:frozen) = freezeWeights(layers(1:frozen));
@@ -125,6 +130,26 @@ function transfer(net, newstate, pts, frozen, method, damagedsensor, mu, sig, sa
         
         XVal=(inp(P(round(0.9*length(P))+1:length(P)),:)-mu)./sig;
         YVal=out(P(round(0.9*length(P))+1:length(P)),:);
+    elseif method == "2d"
+        samples = zeros(pts, 2);
+        num = 0;
+        while num < pts
+            sample = mvnrnd(damagedsensor, [20 20], 1);
+            if sample(1) <= 34.5 && sample(1) >= 0
+                if sample(2) <= 34.5 && sample(2) >= 0
+                    num = num + 1;
+                    samples(num, :) = sample;
+                end
+            end
+        end
+        
+        indices = newstate.findclosest(samples(:,1), samples(:,2));
+        P = indices(randperm(length(indices)));
+        XTrain=(inp(P(1:round(0.9*length(P))),:)-mu)./sig;
+        YTrain=out(P(1:round(0.9*length(P))),:);
+        
+        XVal=(inp(P(round(0.9*length(P))+1:length(P)),:)-mu)./sig;
+        YVal=out(P(round(0.9*length(P))+1:length(P)),:);
     else
         error('Invalid Sampling Method');
     end
@@ -149,15 +174,15 @@ function transfer(net, newstate, pts, frozen, method, damagedsensor, mu, sig, sa
     % Calcute and plot 3D error
     figure();
     if nargin == 9 % save if input savename is given
-        heatscat(net2, newstate, mu, sig, savename);
+        errorout = heatscat(net2, newstate, mu, sig, savename);
         exportgraphics(gcf, strcat('Images/',savename,'.png'));
         close();
     else
-        heatscat(net2, newstate, mu, sig);
+        errorout = heatscat(net2, newstate, mu, sig);
     end
 end
 
-function heatscat(net, state, mu, sig, savename)
+function errorout = heatscat(net, state, mu, sig, savename)
 
     x = state.random.positions(:,1);
     y = state.random.positions(:,2);
@@ -172,6 +197,8 @@ function heatscat(net, state, mu, sig, savename)
     else
         mean(z)
     end
+    
+    errorout = mean(z);
    
     z = min(z, 48.8);
     
