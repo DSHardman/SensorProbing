@@ -1,6 +1,6 @@
 % define input and output from existing variables
-inp=Healed1.random.extracted10;
-out=Healed1.random.positions;
+inp=Healed2.random.extracted10;
+out=Healed2.random.positions;
 
 % normalise inputs & choose 4500 random samples for training
 mu=mean(inp);
@@ -9,10 +9,14 @@ sig=std(inp);
 P=randperm(length(inp));
 XTrain=(inp(P(1:4500),:)-mu)./sig; % 10 percent used for validation
 YTrain=out(P(1:4500),:);
+YTrain(:,1:2) = YTrain(:,1:2)./34.5; % normalise responses
+YTrain(:,3) = YTrain(:,3) - 0.5; % normalise responses
 
 % final 500 used as normalised validation set
 XVal=(inp(P(4500:end),:)-mu)./sig;
 YVal=out(P(4500:end),:);
+YVal(:,1:2) = YVal(:,1:2)./34.5; % normalise responses
+YVal(:,3) = YVal(:,3) - 0.5; % normalise responses
 
 len=size(XTrain,2);
 
@@ -45,7 +49,8 @@ opts = trainingOptions('adam', ...
 % Training
 [net, ~] = trainNetwork(XTrain,YTrain,layers,opts);
 
-heatscat(net, Healed5, mu, sig);
+heatscat(net, Healed2, mu, sig, 'H25NET');
+[errorout, depthpercentage] = heatscat(net, Healed5, mu, sig, 'H25_ZERO');
 
 % % Calcute and plot 3D error over input data
 % figure();
@@ -61,14 +66,26 @@ heatscat(net, Healed5, mu, sig);
 % Large scale transfers & save:
 transferns = [49, 100, 196, 289, 484, 4900];
 
-errors = zeros(3,6,3);
+H25_random = zeros(3,6,3);
+H25_grid = zeros(3,6,3);
+H25_weighted = zeros(3,6,3);
+H25_2d = zeros(3,6,3);
+H25_invert = zeros(3,6,3);
+
+h25_random = zeros(3,6,3);
+h25_grid = zeros(3,6,3);
+h25_weighted = zeros(3,6,3);
+h25_2d = zeros(3,6,3);
+h25_invert = zeros(3,6,3);
+
 for i = 1:3
     for j = 1:length(transferns)
         for k = 3:2:7
-            %transfer(net, Healed5, transferns(j), k, "random", 7, mu, sig, sprintf("h25_random_%d_%d_%d", k, transferns(j), i));
-            %transfer(net, Healed5, transferns(j), k, "grid", 7, mu, sig, sprintf("h25_grid_%d_%d_%d", k, transferns(j), i));
-            %transfer(net, Healed5, transferns(j), k, "weighted", 7, mu, sig, sprintf("h25_weighted_%d_%d_%d", k, transferns(j), i));
-            errors(i,j,(k-1)/2) = transfer(net, Healed2, transferns(j), k, "2d", [17.25 23], mu, sig, sprintf("h25_2d_%d_%d_%d", k, transferns(j), i));
+            [H25_random(i,j,(k-1)/2), h25_random(i,j,(k-1)/2)] = transfer(net, Healed5, transferns(j), k, "random", 7, mu, sig, sprintf("h25_random_%d_%d_%d", k, transferns(j), i));
+            [H25_grid(i,j,(k-1)/2), h25_grid(i,j,(k-1)/2)] = transfer(net, Healed5, transferns(j), k, "grid", 7, mu, sig, sprintf("h25_grid_%d_%d_%d", k, transferns(j), i));
+            [H25_weighted(i,j,(k-1)/2), h25_weighted(i,j,(k-1)/2)] = transfer(net, Healed5, transferns(j), k, "weighted", 7, mu, sig, sprintf("h25_weighted_%d_%d_%d", k, transferns(j), i));
+            [H25_2d(i,j,(k-1)/2), h25_2d(i,j,(k-1)/2)] = transfer(net, Healed5, transferns(j), k, "2d", [26 11.25], mu, sig, sprintf("h25_2d_%d_%d_%d", k, transferns(j), i));
+            [H25_invert(i,j,(k-1)/2), h25_invert(i,j,(k-1)/2)] = transfer(net, Healed5, transferns(j), k, "weightedinvert", 7, mu, sig, sprintf("h25_invert_%d_%d_%d", k, transferns(j), i));
             fprintf("H25: %d/3, %d/6, %d Frozen\n", i, j, k);
         end
     end
@@ -76,7 +93,7 @@ end
 
 %%
 
-function errorout = transfer(net, newstate, pts, frozen, method, damagedsensor, mu, sig, savename)
+function [errorout, depthpercentage] = transfer(net, newstate, pts, frozen, method, damagedsensor, mu, sig, savename)
     % transfer learning: copy network but zero first few layer learning rates
     layers=net.Layers;
     layers(1:frozen) = freezeWeights(layers(1:frozen));
@@ -150,9 +167,40 @@ function errorout = transfer(net, newstate, pts, frozen, method, damagedsensor, 
         
         XVal=(inp(P(round(0.9*length(P))+1:length(P)),:)-mu)./sig;
         YVal=out(P(round(0.9*length(P))+1:length(P)),:);
+    elseif method == "weightedinvert"
+        options = 0:0.05:34.5;
+        weights = zeros(691,1);
+        if damagedsensor <= 4
+            for i = 1:691
+                weights(i) = 1 - exp(-(((options(i)-(4-damagedsensor)*11.5)/15)^2)/2);
+            end
+            inds = randsample(691,pts,true,weights);
+            x = options(inds);
+            y = 34.5*rand(pts, 1);
+        else
+            for i = 1:691
+                weights(i) = 1 - exp(-(((options(i)-(8-damagedsensor)*11.5)/15)^2)/2);
+            end
+            inds = randsample(691,pts,true,weights);
+            y = options(inds);
+            x = 34.5*rand(pts, 1);
+        end
+            
+        indices = newstate.findclosest(x, y);
+        P = indices(randperm(length(indices)));
+        XTrain=(inp(P(1:round(0.9*length(P))),:)-mu)./sig;
+        YTrain=out(P(1:round(0.9*length(P))),:);
+        
+        XVal=(inp(P(round(0.9*length(P))+1:length(P)),:)-mu)./sig;
+        YVal=out(P(round(0.9*length(P))+1:length(P)),:);
     else
         error('Invalid Sampling Method');
     end
+
+    YTrain(:,1:2) = YTrain(:,1:2)./34.5; % normalise responses
+    YTrain(:,3) = YTrain(:,3) - 0.5; % normalise responses
+    YVal(:,1:2) = YVal(:,1:2)./34.5; % normalise responses
+    YVal(:,3) = YVal(:,3) - 0.5; % normalise responses
 
     % Transfer Training
     opts = trainingOptions('adam', ...
@@ -174,28 +222,32 @@ function errorout = transfer(net, newstate, pts, frozen, method, damagedsensor, 
     % Calcute and plot 3D error
     figure();
     if nargin == 9 % save if input savename is given
-        errorout = heatscat(net2, newstate, mu, sig, savename);
-        exportgraphics(gcf, strcat('Images/',savename,'.png'));
+        [errorout, depthpercentage] = heatscat(net2, newstate, mu, sig, savename);
         close();
     else
-        errorout = heatscat(net2, newstate, mu, sig);
+        [errorout, depthpercentage] = heatscat(net2, newstate, mu, sig);
     end
 end
 
-function errorout = heatscat(net, state, mu, sig, savename)
+function [errorout, depthpercentage] = heatscat(net, state, mu, sig, savename)
 
     x = state.random.positions(:,1);
     y = state.random.positions(:,2);
 
     ypred = predict(net, (state.random.extracted10-mu)./sig);
-    z=rssq((ypred-state.random.positions)');
+    ypred(:,1:2) = 34.5*ypred(:,1:2);
+    ypred(:,3) = ypred(:,3) + 0.5;
+    z=rssq((ypred(:,1:2)-state.random.positions(:,1:2))');
+    depthpercentage = round((ypred(:,3)-state.random.positions(:,3))*2)/2;
+    depthpercentage = 100*length(find(depthpercentage==0))/state.random.n;
     
     if nargin == 5
         fid = fopen('Errors.txt', 'a+');
-        fprintf(fid, savename + ": %.2f\n", mean(z));
+        fprintf(fid, savename + ": %.2f, %.2f\n", mean(z), depthpercentage);
         fclose(fid);
     else
         mean(z)
+        depthpercentage
     end
     
     errorout = mean(z);
@@ -214,4 +266,7 @@ function errorout = heatscat(net, state, mu, sig, savename)
     %caxis([0 48.8])
     caxis([0 30])
     set(gca, 'Visible', 'off');
+    if nargin==5
+        exportgraphics(gcf, strcat('Images/',savename,'.png'));
+    end
 end
