@@ -19,12 +19,47 @@ classdef Attempt
             imshow(stringimage);
         end
 
-        function plot(obj)
-            for i = 1:length(obj.transferns)
-                for j = 1:size(obj.results, 1)
-                    scatter(obj.transferns(i), obj.results(j, i));
-                    hold on
+        function plot(obj, basecase, col, display)
+            
+            if nargin >= 2
+                neg = zeros(7,1);
+                pos = zeros(7,1);
+                means = zeros(7,1);
+                for i = 1:6
+                    means(i+1) = mean(obj.results(:,i));
+                    neg(i+1) = means(i+1) - min(obj.results(:,i));
+                    pos(i+1) = max(obj.results(:,i)) - means(i+1);
                 end
+                if any(obj.results > 30)
+                    means(1) = basecase.depthpercentage;
+                else
+                    means(1) = basecase.xymean;
+                end
+            else
+                neg = zeros(5,1);
+                pos = zeros(5,1);
+                means = zeros(5,1);
+                for i = 1:5
+                    means(i) = mean(obj.results(:,i));
+                    neg(i) = means(i) - min(obj.results(:,i));
+                    pos(i) = max(obj.results(:,i)) - means(i);
+                end
+            end
+
+            if nargin <= 2
+                col = 'k';
+            end
+            errorbar([0 obj.transferns(1:6)], means, neg, pos, 'LineWidth', 2,...
+                'Color', col, 'DisplayName', display);
+            set(gca, 'LineWidth', 2, 'FontSize', 15);
+            box off
+            xlabel('Number of Inputs');
+            if any(obj.results > 30)
+                ylabel('Correct Depths (%)')
+                ylim([0 100]);
+            else
+                ylabel('Average Error (mm)');
+                ylim([0 15]);
             end
         end
     end

@@ -1,0 +1,55 @@
+classdef Attempt
+    properties
+        results
+        savename
+        transferns
+    end
+
+    methods
+        function obj = Attempt(results,savename)
+            %Constructor
+            obj.results = results;
+            obj.savename = savename;
+            obj.transferns = [49, 100, 196, 289, 484, 4900];
+        end
+
+        function heat(obj, transindex, n)
+            stringimage = strcat('Images/', obj.savename, '_',...
+                string(obj.transferns(transindex)), '_', string(n), '.png');
+            imshow(stringimage);
+        end
+
+        function plot(obj, basecase, col, display)
+            neg = zeros(6,1);
+            pos = zeros(6,1);
+            means = zeros(6,1);
+            for i = 1:5
+                means(i+1) = mean(obj.results(:,i));
+                neg(i+1) = means(i) - min(obj.results(:,i));
+                pos(i+1) = max(obj.results(:,i)) - means(i);
+            end
+            
+            if nargin >= 2
+                if any(obj.results > 30)
+                    means(1) = basecase.depthpercentage;
+                else
+                    means(1) = basecase.xymean;
+                end
+            end
+
+            if nargin <= 2
+                col = 'k';
+            end
+            errorbar([0 obj.transferns(1:5)], means, neg, pos, 'LineWidth', 2,...
+                'Color', col, 'DisplayName', display);
+            set(gca, 'LineWidth', 2, 'FontSize', 15);
+            box off
+            xlabel('Number of Inputs');
+            if any(obj.results > 30)
+                ylabel('Correct Depths (%)')
+            else
+                ylabel('Average Error (mm)');
+            end
+        end
+    end
+end

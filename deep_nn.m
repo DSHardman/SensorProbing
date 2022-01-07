@@ -49,8 +49,7 @@ opts = trainingOptions('adam', ...
 % Training
 [net, ~] = trainNetwork(XTrain,YTrain,layers,opts);
 
-heatscat(net, Healed2, mu, sig, 'H25NET');
-[errorout, depthpercentage] = heatscat(net, Healed5, mu, sig, 'H25_ZERO');
+[errorout, depthpercentage] = heatscat(net, Healed2, mu, sig);
 
 % % Calcute and plot 3D error over input data
 % figure();
@@ -66,37 +65,48 @@ heatscat(net, Healed2, mu, sig, 'H25NET');
 % Large scale transfers & save:
 transferns = [49, 100, 196, 289, 484, 4900];
 
-H25_random = zeros(3,6,3);
-H25_grid = zeros(3,6,3);
-H25_weighted = zeros(3,6,3);
-H25_2d = zeros(3,6,3);
-H25_invert = zeros(3,6,3);
+% H25_random = zeros(3,6,3);
+% H25_grid = zeros(3,6,3);
+% H25_weighted = zeros(3,6,3);
+% H25_2d = zeros(3,6,3);
+% H25_invert = zeros(3,6,3);
+% 
+% h25_random = zeros(3,6,3);
+% h25_grid = zeros(3,6,3);
+% h25_weighted = zeros(3,6,3);
+% h25_2d = zeros(3,6,3);
+% h25_invert = zeros(3,6,3);
 
-h25_random = zeros(3,6,3);
-h25_grid = zeros(3,6,3);
-h25_weighted = zeros(3,6,3);
-h25_2d = zeros(3,6,3);
-h25_invert = zeros(3,6,3);
+% for i = 1:3
+%     for j = 1:length(transferns)
+%         for k = 3:2:7
+%             [H25_random(i,j,(k-1)/2), h25_random(i,j,(k-1)/2)] = transfer(net, Healed5, transferns(j), k, "random", 7, mu, sig, sprintf("h25_random_%d_%d_%d", k, transferns(j), i));
+%             [H25_grid(i,j,(k-1)/2), h25_grid(i,j,(k-1)/2)] = transfer(net, Healed5, transferns(j), k, "grid", 7, mu, sig, sprintf("h25_grid_%d_%d_%d", k, transferns(j), i));
+%             [H25_weighted(i,j,(k-1)/2), h25_weighted(i,j,(k-1)/2)] = transfer(net, Healed5, transferns(j), k, "weighted", 7, mu, sig, sprintf("h25_weighted_%d_%d_%d", k, transferns(j), i));
+%             [H25_2d(i,j,(k-1)/2), h25_2d(i,j,(k-1)/2)] = transfer(net, Healed5, transferns(j), k, "2d", [26 11.25], mu, sig, sprintf("h25_2d_%d_%d_%d", k, transferns(j), i));
+%             [H25_invert(i,j,(k-1)/2), h25_invert(i,j,(k-1)/2)] = transfer(net, Healed5, transferns(j), k, "weightedinvert", 7, mu, sig, sprintf("h25_invert_%d_%d_%d", k, transferns(j), i));
+%             fprintf("H25: %d/3, %d/6, %d Frozen\n", i, j, k);
+%         end
+%     end
+% end
+
+H12_scratch = zeros(3,6);
+h12_scratch = zeros(3,6);
 
 for i = 1:3
     for j = 1:length(transferns)
-        for k = 3:2:7
-            [H25_random(i,j,(k-1)/2), h25_random(i,j,(k-1)/2)] = transfer(net, Healed5, transferns(j), k, "random", 7, mu, sig, sprintf("h25_random_%d_%d_%d", k, transferns(j), i));
-            [H25_grid(i,j,(k-1)/2), h25_grid(i,j,(k-1)/2)] = transfer(net, Healed5, transferns(j), k, "grid", 7, mu, sig, sprintf("h25_grid_%d_%d_%d", k, transferns(j), i));
-            [H25_weighted(i,j,(k-1)/2), h25_weighted(i,j,(k-1)/2)] = transfer(net, Healed5, transferns(j), k, "weighted", 7, mu, sig, sprintf("h25_weighted_%d_%d_%d", k, transferns(j), i));
-            [H25_2d(i,j,(k-1)/2), h25_2d(i,j,(k-1)/2)] = transfer(net, Healed5, transferns(j), k, "2d", [26 11.25], mu, sig, sprintf("h25_2d_%d_%d_%d", k, transferns(j), i));
-            [H25_invert(i,j,(k-1)/2), h25_invert(i,j,(k-1)/2)] = transfer(net, Healed5, transferns(j), k, "weightedinvert", 7, mu, sig, sprintf("h25_invert_%d_%d_%d", k, transferns(j), i));
-            fprintf("H25: %d/3, %d/6, %d Frozen\n", i, j, k);
-        end
+        k = 1;
+        [H12_scratch(i,j), h12_scratch(i,j)] = transfer(layers, Healed2, transferns(j), k, "random", 7, mu, sig, sprintf("h12_scratch_%d_%d", transferns(j), i));
+        fprintf("H12: %d/3, %d/6\n", i, j);
     end
 end
 
 %%
 
-function [errorout, depthpercentage] = transfer(net, newstate, pts, frozen, method, damagedsensor, mu, sig, savename)
+function [errorout, depthpercentage] = transfer(layers, newstate, pts, frozen, method, damagedsensor, mu, sig, savename)
     % transfer learning: copy network but zero first few layer learning rates
-    layers=net.Layers;
-    layers(1:frozen) = freezeWeights(layers(1:frozen));
+    %layers=net.Layers;
+    %layers(1:frozen) = freezeWeights(layers(1:frozen));
 
     % new inputs, outputs, normalised training/validation sets for healed
     inp=newstate.random.extracted10;
@@ -206,10 +216,10 @@ function [errorout, depthpercentage] = transfer(net, newstate, pts, frozen, meth
     opts = trainingOptions('adam', ...
         'MaxEpochs',2000, ... % number of training iterations.
         'MiniBatchSize', 512*7,... %%%512
-         'ValidationData',{XVal,YVal}, ...
+        'ValidationData',{XVal,YVal}, ...
+        'GradientThreshold',10, ...
         'ValidationFrequency',30, ...
         'ValidationPatience',10,...
-        'GradientThreshold',10, ...
         'InitialLearnRate',0.005*10, ...
         'LearnRateSchedule','piecewise', ...
         'LearnRateDropPeriod',125*10, ...%%changed
