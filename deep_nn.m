@@ -1,6 +1,6 @@
 % define input and output from existing variables
-inp=Healed2.random.extracted10;
-out=Healed2.random.positions;
+inp=Damaged4.random.extracted10;
+out=Damaged4.random.positions;
 
 % normalise inputs & choose 4500 random samples for training
 mu=mean(inp);
@@ -49,7 +49,7 @@ opts = trainingOptions('adam', ...
 % Training
 [net, ~] = trainNetwork(XTrain,YTrain,layers,opts);
 
-[errorout, depthpercentage] = heatscat(net, Healed2, mu, sig);
+[errorout, depthpercentage] = heatscat(net, Damaged4, mu, sig);
 
 % % Calcute and plot 3D error over input data
 % figure();
@@ -262,7 +262,7 @@ function [errorout, depthpercentage] = heatscat(net, state, mu, sig, savename)
     
     errorout = mean(z);
    
-    z = min(z, 48.8);
+    z = min(z, 48.8); % error cannot exceed corner-to-corner square size
     
     % use interpolated contour maps
     interpolant = scatteredInterpolant(x,y,double(z).');
