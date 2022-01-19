@@ -66,6 +66,14 @@ classdef SensorState < handle
         end
         
         function lineplot(obj, sensor)
+
+            if nargin < 2
+                for i = 1:8
+                    obj.lineplot(i);
+                    hold on;
+                end
+                return
+            end
             
             colors = [0 0.447 0.741;...
                         0.85 0.325 0.98;...
@@ -77,8 +85,18 @@ classdef SensorState < handle
                         0 0 0];
             lineresponse = zeros(obj.line.n, 1);
             for i = 1:obj.line.n
-                lineresponse(i) = max(obj.line.rawresponses(i,:,sensor))...
-                    - min(obj.line.rawresponses(i, :, sensor));
+
+                 if size(obj.line.rawresponses, 2) == 200
+                     lineresponse(i) = ((obj.line.rawresponses(i,20,sensor)+...
+                         obj.line.rawresponses(i,200,sensor))/2) -...
+                         obj.line.rawresponses(i,120,sensor);
+                         
+                 else
+                    lineresponse(i) = ((obj.line.rawresponses(i,40,sensor)+...
+                        obj.line.rawresponses(i,290,sensor))/2) -...
+                        obj.line.rawresponses(i,135,sensor);
+                        
+                 end
             end
             
             if obj.line.positions(end,1) == obj.line.positions(1,1)
@@ -95,7 +113,7 @@ classdef SensorState < handle
             ylabel('\Delta Response (V)');
             box off
             xlim([0 34.5]);
-            ylim([0 2.5])
+            ylim([-2.5 2.5])
             set(gcf, 'Position', [462.6000  391.4000  596.0000  280.8000]);
         end
         
