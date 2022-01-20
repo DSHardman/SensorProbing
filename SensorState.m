@@ -90,21 +90,27 @@ classdef SensorState < handle
                      lineresponse(i) = ((obj.line.rawresponses(i,20,sensor)+...
                          obj.line.rawresponses(i,200,sensor))/2) -...
                          obj.line.rawresponses(i,120,sensor);
+                     % Normalise
+                     lineresponse(i) = 2*lineresponse(i)/(obj.line.rawresponses(i,20,sensor)+...
+                         obj.line.rawresponses(i,200,sensor));
                          
                  else
                     lineresponse(i) = ((obj.line.rawresponses(i,40,sensor)+...
                         obj.line.rawresponses(i,290,sensor))/2) -...
                         obj.line.rawresponses(i,135,sensor);
+                    % Normalise
+                    lineresponse(i) = 2*lineresponse(i)/(obj.line.rawresponses(i,40,sensor)+...
+                         obj.line.rawresponses(i,290,sensor));
                         
                  end
             end
             
             if obj.line.positions(end,1) == obj.line.positions(1,1)
-                plot(obj.line.positions(:,2), lineresponse, 'Color',...
+                plot(obj.line.positions(:,2), smooth(lineresponse, 6), 'Color',...
                     colors(sensor,:), 'LineWidth', 2);
                 xlabel('y Position (mm)');
             else
-                plot(obj.line.positions(:,1), lineresponse, 'Color',...
+                plot(obj.line.positions(:,1), smooth(lineresponse, 6), 'Color',...
                     colors(sensor,:), 'LineWidth', 2);
                 xlabel('x Position (mm)');
             end
@@ -113,7 +119,7 @@ classdef SensorState < handle
             ylabel('\Delta Response (V)');
             box off
             xlim([0 34.5]);
-            ylim([-2.5 2.5])
+            %ylim([-2.5 2.5])
             set(gcf, 'Position', [462.6000  391.4000  596.0000  280.8000]);
         end
         
