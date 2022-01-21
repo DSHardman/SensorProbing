@@ -18,6 +18,27 @@ YVal=out(P(4500:end),:);
 YVal(:,1:2) = YVal(:,1:2)./34.5; % normalise responses
 YVal(:,3) = YVal(:,3) - 0.5; % normalise responses
 
+
+%inp = [Original.random.extracted10; Damaged1.random.extracted10; Healed1.random.extracted10];
+%out = [Original.random.positions; Damaged1.random.positions; Healed1.random.positions];
+
+% normalise inputs & choose 4500 random samples for training
+mu=mean(inp);
+sig=std(inp);
+
+P=randperm(length(inp));
+XTrain=(inp(P(1:3*4500),:)-mu)./sig; % 10 percent used for validation
+YTrain=out(P(1:3*4500),:);
+YTrain(:,1:2) = YTrain(:,1:2)./34.5; % normalise responses
+YTrain(:,3) = YTrain(:,3) - 0.5; % normalise responses
+
+% final 500 used as normalised validation set
+XVal=(inp(P(3*4500:end),:)-mu)./sig;
+YVal=out(P(3*4500:end),:);
+YVal(:,1:2) = YVal(:,1:2)./34.5; % normalise responses
+YVal(:,3) = YVal(:,3) - 0.5; % normalise responses
+
+
 len=size(XTrain,2);
 
 % define network and training options
@@ -49,7 +70,10 @@ opts = trainingOptions('adam', ...
 % Training
 [net, ~] = trainNetwork(XTrain,YTrain,layers,opts);
 
+
+%%
 [errorout, depthpercentage] = heatscat(net, Damaged4, mu, sig);
+
 
 % % Calcute and plot 3D error over input data
 % figure();
@@ -60,10 +84,10 @@ opts = trainingOptions('adam', ...
 % subplot(1,3,3); heatscat(net, Healed5, mu, sig);
 
 %% Transfer
-%transfer(net, Healed5, 49, 5, "weighted", 7, mu, sig);
+transfer(net, Healed5, 49, 5, "weighted", 7, mu, sig);
 
 % Large scale transfers & save:
-transferns = [49, 100, 196, 289, 484, 4900];
+%transferns = [49, 100, 196, 289, 484, 4900];
 
 % H25_random = zeros(3,6,3);
 % H25_grid = zeros(3,6,3);
@@ -90,23 +114,12 @@ transferns = [49, 100, 196, 289, 484, 4900];
 %     end
 % end
 
-H12_scratch = zeros(3,6);
-h12_scratch = zeros(3,6);
-
-for i = 1:3
-    for j = 1:length(transferns)
-        k = 1;
-        [H12_scratch(i,j), h12_scratch(i,j)] = transfer(layers, Healed2, transferns(j), k, "random", 7, mu, sig, sprintf("h12_scratch_%d_%d", transferns(j), i));
-        fprintf("H12: %d/3, %d/6\n", i, j);
-    end
-end
-
 %%
 
-function [errorout, depthpercentage] = transfer(layers, newstate, pts, frozen, method, damagedsensor, mu, sig, savename)
+function [errorout, depthpercentage] = transfer(net, newstate, pts, frozen, method, damagedsensor, mu, sig, savename)
     % transfer learning: copy network but zero first few layer learning rates
-    %layers=net.Layers;
-    %layers(1:frozen) = freezeWeights(layers(1:frozen));
+    layers=net.Layers;
+    layers(1:frozen) = freezeWeights(layers(1:frozen));
 
     % new inputs, outputs, normalised training/validation sets for healed
     inp=newstate.random.extracted10;
