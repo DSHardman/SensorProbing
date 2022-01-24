@@ -22,7 +22,6 @@ classdef SensorState < handle
         end
         
         function animateline(obj)
-            
             obj.line.plotresponse(1);
             pause(0.1);
             for i = 2:obj.line.n
@@ -39,6 +38,7 @@ classdef SensorState < handle
                 legend('Orientation', 'Horizontal', 'Location', 's');
                 legend boxoff
                 
+                set(gcf, 'Color', 'w');
                 pause(0.1);
             end
         end
