@@ -5,4 +5,7 @@
 SensorStates.mat
 *.mov
 *.mkv
+*.mp4
+*.osp
 Images/*
+Supplementary/*
