@@ -1,90 +1,79 @@
 % define input and output from existing variables
 
 
-for n = 1:10
-    for k = 1:3
-        order = [5; 1; 10; 6; 3; 8; 4; 7; 2; 9];
-        
-        %inp=Damaged1.random.extracted10;
-        
-        inp = [];
-        for i = 1:n
-            inp = [inp Original.random.extracted10(:, (order(i)-1)*8+1:(order(i)-1)*8+8)];
-        end
-        out=Original.random.positions;
-        
-        % normalise inputs & choose 4500 random samples for training
-        mu=mean(inp);
-        sig=std(inp);
-        
-        P=randperm(length(inp));
-        XTrain=(inp(P(1:4500),:)-mu)./sig; % 10 percent used for validation
-        YTrain=out(P(1:4500),:);
-        YTrain(:,1:2) = YTrain(:,1:2)./34.5; % normalise responses
-        YTrain(:,3) = YTrain(:,3) - 0.5; % normalise responses
-        
-        % final 500 used as normalised validation set
-        XVal=(inp(P(4500:end),:)-mu)./sig;
-        YVal=out(P(4500:end),:);
-        YVal(:,1:2) = YVal(:,1:2)./34.5; % normalise responses
-        YVal(:,3) = YVal(:,3) - 0.5; % normalise responses
-        
-        
-        %inp = [Original.random.extracted10; Damaged1.random.extracted10; Healed1.random.extracted10];
-        %out = [Original.random.positions; Damaged1.random.positions; Healed1.random.positions];
-        
-        % normalise inputs & choose 4500 random samples for training
-        mu=mean(inp);
-        sig=std(inp);
-        
-        P=randperm(length(inp));
-        XTrain=(inp(P(1:4500),:)-mu)./sig; % 10 percent used for validation
-        YTrain=out(P(1:4500),:);
-        YTrain(:,1:2) = YTrain(:,1:2)./34.5; % normalise responses
-        YTrain(:,3) = YTrain(:,3) - 0.5; % normalise responses
-        
-        % final 500 used as normalised validation set
-        XVal=(inp(P(4500:end),:)-mu)./sig;
-        YVal=out(P(4500:end),:);
-        YVal(:,1:2) = YVal(:,1:2)./34.5; % normalise responses
-        YVal(:,3) = YVal(:,3) - 0.5; % normalise responses
-        
-        
-        len=size(XTrain,2);
-        
-        % define network and training options
-        layers = [
-            featureInputLayer(len,"Name","featureinput")
-            fullyConnectedLayer(20,"Name","fc_1")
-             tanhLayer("Name","relu2")
-            fullyConnectedLayer(10,"Name","fc_2")
-            tanhLayer("Name","reluw")
-                fullyConnectedLayer(10,"Name","fc_5")
-            reluLayer("Name","relu3e")
-            fullyConnectedLayer(3,"Name","fc_6")
-            regressionLayer("Name","regressionoutput")];
-        
-        opts = trainingOptions('adam', ...
-            'MaxEpochs',2000, ... % number of training iterations.
-            'MiniBatchSize', 512*7,... %%%512
-             'ValidationData',{XVal,YVal}, ...
-            'ValidationFrequency',30, ...
-            'GradientThreshold',1, ...
-            'ValidationPatience',10,...
-            'InitialLearnRate',0.005*10, ...
-            'LearnRateSchedule','piecewise', ...
-            'LearnRateDropPeriod',125*10, ...%%changed
-            'LearnRateDropFactor',0.2/1, ...%%
-            'Verbose',0, ...
-            'Plots','none', 'ExecutionEnvironment', 'gpu');
-        
-        % Training
-        [net, ~] = trainNetwork(XTrain,YTrain,layers,opts);
-        
-        [errorout, depthpercentage] = heatscat(net, Original, mu, sig, n,...
-            "InputNumber_" + string(n) + "_" + string(k));
-    end
-end
+%inp=Damaged1.random.extracted10;
+out=Original.random.positions;
+
+% normalise inputs & choose 4500 random samples for training
+mu=mean(inp);
+sig=std(inp);
+
+P=randperm(length(inp));
+XTrain=(inp(P(1:4500),:)-mu)./sig; % 10 percent used for validation
+YTrain=out(P(1:4500),:);
+YTrain(:,1:2) = YTrain(:,1:2)./34.5; % normalise responses
+YTrain(:,3) = YTrain(:,3) - 0.5; % normalise responses
+
+% final 500 used as normalised validation set
+XVal=(inp(P(4500:end),:)-mu)./sig;
+YVal=out(P(4500:end),:);
+YVal(:,1:2) = YVal(:,1:2)./34.5; % normalise responses
+YVal(:,3) = YVal(:,3) - 0.5; % normalise responses
+
+
+%inp = [Original.random.extracted10; Damaged1.random.extracted10; Healed1.random.extracted10];
+%out = [Original.random.positions; Damaged1.random.positions; Healed1.random.positions];
+
+% normalise inputs & choose 4500 random samples for training
+mu=mean(inp);
+sig=std(inp);
+
+P=randperm(length(inp));
+XTrain=(inp(P(1:4500),:)-mu)./sig; % 10 percent used for validation
+YTrain=out(P(1:4500),:);
+YTrain(:,1:2) = YTrain(:,1:2)./34.5; % normalise responses
+YTrain(:,3) = YTrain(:,3) - 0.5; % normalise responses
+
+% final 500 used as normalised validation set
+XVal=(inp(P(4500:end),:)-mu)./sig;
+YVal=out(P(4500:end),:);
+YVal(:,1:2) = YVal(:,1:2)./34.5; % normalise responses
+YVal(:,3) = YVal(:,3) - 0.5; % normalise responses
+
+
+len=size(XTrain,2);
+
+% define network and training options
+layers = [
+    featureInputLayer(len,"Name","featureinput")
+    fullyConnectedLayer(20,"Name","fc_1")
+     tanhLayer("Name","relu2")
+    fullyConnectedLayer(10,"Name","fc_2")
+    tanhLayer("Name","reluw")
+        fullyConnectedLayer(10,"Name","fc_5")
+    reluLayer("Name","relu3e")
+    fullyConnectedLayer(3,"Name","fc_6")
+    regressionLayer("Name","regressionoutput")];
+
+opts = trainingOptions('adam', ...
+    'MaxEpochs',2000, ... % number of training iterations.
+    'MiniBatchSize', 512*7,... %%%512
+     'ValidationData',{XVal,YVal}, ...
+    'ValidationFrequency',30, ...
+    'GradientThreshold',1, ...
+    'ValidationPatience',10,...
+    'InitialLearnRate',0.005*10, ...
+    'LearnRateSchedule','piecewise', ...
+    'LearnRateDropPeriod',125*10, ...%%changed
+    'LearnRateDropFactor',0.2/1, ...%%
+    'Verbose',0, ...
+    'Plots','none', 'ExecutionEnvironment', 'gpu');
+
+% Training
+[net, ~] = trainNetwork(XTrain,YTrain,layers,opts);
+
+[errorout, depthpercentage] = heatscat(net, Original, mu, sig,...
+    "InputNumber_" + string(n) + "_" + string(k));
 
 
 % % Calcute and plot 3D error over input data
@@ -264,29 +253,19 @@ function [errorout, depthpercentage] = transfer(net, newstate, pts, frozen, meth
     end
 end
 
-function [errorout, depthpercentage] = heatscat(net, state, mu, sig, n, savename)
+function [errorout, depthpercentage] = heatscat(net, state, mu, sig, savename)
 
     x = state.random.positions(:,1);
     y = state.random.positions(:,2);
 
-    %ypred = predict(net, (state.random.extracted10-mu)./sig);
-
-    order = [5; 1; 10; 6; 3; 8; 4; 7; 2; 9];
-    
-    inp = [];
-    for i = 1:n
-        inp = [inp state.random.extracted10(:, (order(i)-1)*8+1:(order(i)-1)*8+8)];
-    end
-
-    ypred = predict(net, (inp-mu)./sig);
-
+    ypred = predict(net, (state.random.extracted10-mu)./sig);
     ypred(:,1:2) = 34.5*ypred(:,1:2);
     ypred(:,3) = ypred(:,3) + 0.5;
     z=rssq((ypred(:,1:2)-state.random.positions(:,1:2))');
     depthpercentage = round((ypred(:,3)-state.random.positions(:,3))*2)/2;
     depthpercentage = 100*length(find(depthpercentage==0))/state.random.n;
     
-    if nargin == 6
+    if nargin == 5
         fid = fopen('InputNumber.txt', 'a+');
         fprintf(fid, savename + ": %.2f, %.2f\n", mean(z), depthpercentage);
         fclose(fid);
@@ -311,7 +290,7 @@ function [errorout, depthpercentage] = heatscat(net, state, mu, sig, n, savename
     %caxis([0 48.8])
     caxis([0 30])
     set(gca, 'Visible', 'off');
-    if nargin==6
+    if nargin==5
         exportgraphics(gcf, strcat('Images/',savename,'.png'));
     end
 end

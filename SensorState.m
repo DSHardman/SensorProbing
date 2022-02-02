@@ -61,6 +61,8 @@ classdef SensorState < handle
                 legend('Orientation', 'Horizontal', 'Location', 's');
                 legend boxoff
                 
+                set(gcf, 'color', 'w');
+
                 pause(0.05);
             end
         end
