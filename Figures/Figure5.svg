@@ -1313,9 +1313,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.35"
-     inkscape:cx="508.57142"
-     inkscape:cy="1007.1428"
+     inkscape:zoom="0.49497475"
+     inkscape:cx="1024.2947"
+     inkscape:cy="611.14229"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      inkscape:document-rotation="0"
@@ -2211,19 +2211,9 @@
                  id="tspan8033-8"
                  style="fill:#00001a;fill-opacity:1">2</tspan></text>
             <path
-               d="m 1.515625,-93.915632 c -0.15625,0 -0.234375,-0.07292 -0.234375,-0.21875 0.010417,-0.02083 0.018229,-0.03646 0.023437,-0.04687 0.00521,-0.01042 0.00781,-0.02604 0.00781,-0.04687 l 9.640628,-19.437498 c 0.08333,-0.19792 0.25,-0.29688 0.5,-0.29688 h 0.390625 c 0.25,0 0.416667,0.099 0.5,0.29688 l 9.640625,19.437498 c 0.01042,0.02083 0.01823,0.03646 0.02344,0.04687 0.0052,0.01042 0.0078,0.02604 0.0078,0.04687 10e-6,0.145834 -0.07812,0.21875 -0.234365,0.21875 z m 1.84375,-2.25 h 14.75 L 10.75,-111.02501 Z"
+               d="m 32.154333,-89.61441 c -0.15625,0 -0.234375,-0.07292 -0.234375,-0.21875 0.01042,-0.02083 0.01823,-0.03646 0.02344,-0.04687 0.0052,-0.01042 0.0078,-0.02604 0.0078,-0.04687 l 9.640628,-19.4375 c 0.08333,-0.19792 0.25,-0.29688 0.5,-0.29688 h 0.390625 c 0.25,0 0.416667,0.099 0.5,0.29688 l 9.640625,19.4375 c 0.01042,0.02083 0.01823,0.03646 0.02344,0.04687 0.0052,0.01042 0.0078,0.02604 0.0078,0.04687 10e-6,0.145834 -0.07812,0.21875 -0.234365,0.21875 z m 1.84375,-2.25 h 14.75 l -7.359375,-14.85938 z"
                style="fill:#000022;fill-opacity:1;fill-rule:nonzero;stroke:none"
-               id="path8039-7"
-               transform="translate(-23.000037)" />
-            <text
-               style="font-variant:normal;font-weight:normal;font-size:27.5px;font-family:Helvetica;-inkscape-font-specification:Helvetica;writing-mode:lr-tb;fill:#000022;fill-opacity:1;fill-rule:nonzero;stroke:none"
-               id="text8047-7"
-               x="7.6450043"
-               y="-93.915634"><tspan
-                 x="7.6450043 27.500004 42.790005 56.540005 71.830002 87.120003 102.41 116.16 131.45 139.095 148.2525 166.595"
-                 y="-93.915634"
-                 sodipodi:role="line"
-                 id="tspan8045-2">Response (V)</tspan></text>
+               id="path8039-7" />
           </g>
         </g>
       </g>
@@ -2533,20 +2523,6 @@
                  y="10"
                  id="tspan8033-3-4"
                  style="fill:#00001a;fill-opacity:1">2</tspan></text>
-            <path
-               d="m 1.515625,-93.915632 c -0.15625,0 -0.234375,-0.07292 -0.234375,-0.21875 0.010417,-0.02083 0.018229,-0.03646 0.023437,-0.04687 0.00521,-0.01042 0.00781,-0.02604 0.00781,-0.04687 l 9.640628,-19.437498 c 0.08333,-0.19792 0.25,-0.29688 0.5,-0.29688 h 0.390625 c 0.25,0 0.416667,0.099 0.5,0.29688 l 9.640625,19.437498 c 0.01042,0.02083 0.01823,0.03646 0.02344,0.04687 0.0052,0.01042 0.0078,0.02604 0.0078,0.04687 10e-6,0.145834 -0.07812,0.21875 -0.234365,0.21875 z m 1.84375,-2.25 h 14.75 L 10.75,-111.02501 Z"
-               style="fill:#000022;fill-opacity:1;fill-rule:nonzero;stroke:none"
-               id="path8039-6-9"
-               transform="translate(-23.000037)" />
-            <text
-               style="font-variant:normal;font-weight:normal;font-size:27.5px;font-family:Helvetica;-inkscape-font-specification:Helvetica;writing-mode:lr-tb;fill:#000022;fill-opacity:1;fill-rule:nonzero;stroke:none"
-               id="text8047-0-6"
-               x="7.6450043"
-               y="-93.915634"><tspan
-                 x="7.6450043 27.500004 42.790005 56.540005 71.830002 87.120003 102.41 116.16 131.45 139.095 148.2525 166.595"
-                 y="-93.915634"
-                 sodipodi:role="line"
-                 id="tspan8045-6-8">Response (V)</tspan></text>
           </g>
         </g>
       </g>
@@ -2867,20 +2843,6 @@
                  y="10"
                  id="tspan8033-3-2-4"
                  style="fill:#00001a;fill-opacity:1">2</tspan></text>
-            <path
-               d="m 1.515625,-93.915632 c -0.15625,0 -0.234375,-0.07292 -0.234375,-0.21875 0.010417,-0.02083 0.018229,-0.03646 0.023437,-0.04687 0.00521,-0.01042 0.00781,-0.02604 0.00781,-0.04687 l 9.640628,-19.437498 c 0.08333,-0.19792 0.25,-0.29688 0.5,-0.29688 h 0.390625 c 0.25,0 0.416667,0.099 0.5,0.29688 l 9.640625,19.437498 c 0.01042,0.02083 0.01823,0.03646 0.02344,0.04687 0.0052,0.01042 0.0078,0.02604 0.0078,0.04687 10e-6,0.145834 -0.07812,0.21875 -0.234365,0.21875 z m 1.84375,-2.25 h 14.75 L 10.75,-111.02501 Z"
-               style="fill:#000022;fill-opacity:1;fill-rule:nonzero;stroke:none"
-               id="path8039-6-5-8"
-               transform="translate(-23.000037)" />
-            <text
-               style="font-variant:normal;font-weight:normal;font-size:27.5px;font-family:Helvetica;-inkscape-font-specification:Helvetica;writing-mode:lr-tb;fill:#000022;fill-opacity:1;fill-rule:nonzero;stroke:none"
-               id="text8047-0-8-0"
-               x="7.6450043"
-               y="-93.915634"><tspan
-                 x="7.6450043 27.500004 42.790005 56.540005 71.830002 87.120003 102.41 116.16 131.45 139.095 148.2525 166.595"
-                 y="-93.915634"
-                 sodipodi:role="line"
-                 id="tspan8045-6-0-0">Response (V)</tspan></text>
           </g>
         </g>
       </g>
@@ -4857,6 +4819,58 @@
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.43717px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.19892"
            x="117.4354"
            y="-149.4296">x-y error (mm)</tspan></text>
+    </g>
+    <text
+       xml:space="preserve"
+       style="font-size:3.00448px;line-height:1.25;font-family:sans-serif;stroke-width:0.0751122"
+       x="-65.894135"
+       y="-224.60432"
+       id="text3287"
+       transform="rotate(-90)"><tspan
+         sodipodi:role="line"
+         id="tspan3285"
+         style="stroke-width:0.0751122"
+         x="-65.894135"
+         y="-224.60432">V (V)</tspan></text>
+    <g
+       id="g4495"
+       transform="translate(4.4412202,-3.96875)">
+      <path
+         d="m -114.73939,71.951533 c 0,0.02063 -0.01,0.03095 -0.0289,0.03095 -0.003,-0.0014 -0.005,-0.0024 -0.006,-0.0031 -0.001,-6.87e-4 -0.003,-0.001 -0.006,-0.001 l -2.5666,-1.272981 c -0.0261,-0.011 -0.0392,-0.03301 -0.0392,-0.06602 v -0.05158 c 0,-0.03301 0.0131,-0.05502 0.0392,-0.06602 l 2.5666,-1.272981 c 0.003,-0.0014 0.005,-0.0024 0.006,-0.0031 10e-4,-6.87e-4 0.003,-10e-4 0.006,-10e-4 0.0193,-1e-6 0.0289,0.01031 0.0289,0.03095 z m -0.2971,-0.243455 v -1.947641 l -1.96208,0.971757 z"
+         style="fill:#000022;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.132043"
+         id="path8039-7-0" />
+      <text
+         xml:space="preserve"
+         style="font-size:3.00448px;line-height:1.25;font-family:sans-serif;stroke-width:0.0751122"
+         x="-68.454567"
+         y="-114.93157"
+         id="text3287-6"
+         transform="rotate(-90)"><tspan
+           sodipodi:role="line"
+           id="tspan3285-3"
+           style="stroke-width:0.0751122"
+           x="-68.454567"
+           y="-114.93157">V (V)</tspan></text>
+    </g>
+    <g
+       id="g4604"
+       transform="translate(0,0.14173995)">
+      <path
+         d="m 7.7721458,67.841042 c 0,0.02063 -0.00963,0.03095 -0.028885,0.03095 -0.00275,-0.0014 -0.00481,-0.0024 -0.00619,-0.0031 -0.00138,-6.87e-4 -0.00344,-0.001 -0.00619,-0.001 l -2.566591,-1.273009 c -0.026134,-0.011 -0.039201,-0.03301 -0.039201,-0.06602 v -0.05158 c 0,-0.03301 0.013072,-0.05502 0.039201,-0.06602 l 2.5665938,-1.272981 c 0.00275,-0.0014 0.00481,-0.0024 0.00619,-0.0031 0.00138,-6.87e-4 0.00344,-0.001 0.00619,-0.001 0.019256,-10e-7 0.028885,0.01031 0.028885,0.03095 z M 7.4750481,67.597587 v -1.947641 l -1.9620832,0.971757 z"
+         style="fill:#000022;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.132043"
+         id="path8039-7-9" />
+      <text
+         xml:space="preserve"
+         style="font-size:3.00448px;line-height:1.25;font-family:sans-serif;stroke-width:0.0751122"
+         x="-64.344078"
+         y="7.5799589"
+         id="text3287-8"
+         transform="rotate(-90)"><tspan
+           sodipodi:role="line"
+           id="tspan3285-7"
+           style="stroke-width:0.0751122"
+           x="-64.344078"
+           y="7.5799589">V (V)</tspan></text>
     </g>
   </g>
 </svg>
